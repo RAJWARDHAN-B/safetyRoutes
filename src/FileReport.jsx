@@ -5,6 +5,7 @@ const FileReport = () => {
   const [location, setLocation] = useState('');
   const [time, setTime] = useState('');
   const [crime, setCrime] = useState('');
+  const [description, setDescription] = useState('');
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${
@@ -111,6 +112,26 @@ const FileReport = () => {
               <option value="harassment">Harassment</option>
               <option value="other">Other</option>
             </select>
+          </div>
+
+          {/* Description Input */}
+          <div>
+            <label className={`block text-sm mb-2 transition-colors duration-300 ${
+              darkMode ? 'text-gray-300' : 'text-gray-700'
+            }`}>
+              Description
+            </label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className={`w-full p-1.5 rounded-lg border transition-colors duration-300 ${
+                darkMode 
+                  ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-400'
+                  : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+              }`}
+              placeholder="Please describe what happened"
+              rows={4}
+            />
           </div>
 
           {/* Submit Button */}
