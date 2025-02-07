@@ -6,6 +6,65 @@ const RouteForm = ({ setShowRouteDialog }) => {
   const [endLocation, setEndLocation] = useState('');
   const [startCoords, setStartCoords] = useState(null);
   const [endCoords, setEndCoords] = useState(null);
+  const [coordString, setCoordString] = useState('');
+  const [parsedCoords, setParsedCoords] = useState(null);
+  const [error, setError] = useState('');
+  const [response, setResponse] = useState(null);
+
+  // Function to parse the coordinate string
+  const parseCoordinates = (coordString) => {
+    try {
+      let coords = coordString.replace(/[()]/g, "").split(",");
+      
+      // Convert string values to float
+      let lat = parseFloat(coords[0].trim());
+      let lon = parseFloat(coords[1].trim());
+
+      // Check if parsed values are valid numbers
+      if (isNaN(lat) || isNaN(lon)) {
+        throw new Error("Invalid coordinate format");
+      }
+
+      return [lat, lon]; // Return as an array of floats
+    } catch (error) {
+      throw new Error("Invalid coordinate format");
+    }
+  };
+
+  // Handle form submission and POST request to FastAPI
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent page reload
+
+    try {
+      // Parse coordinates from input string
+      const parsed = parseCoordinates(coordString);
+      setParsedCoords(parsed); // Store parsed coordinates
+      setError(''); // Reset any previous errors
+
+      // Send the parsed coordinates to the FastAPI backend
+      const response = await fetch("http://127.0.0.1:8000/safe_route", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ origin: parsed, destination: parsed }), // send the parsed coordinates as origin and destination
+      });
+
+      // Parse the response JSON
+      const data = await response.json();
+
+      // Assuming the response is a list of tuples, set the response
+      if (data.route) {
+        setResponse(data.route); // Store the received route
+      } else {
+        setError("Error receiving route data");
+      }
+    } catch (err) {
+      setError(err.message); // Set error message if anything goes wrong
+      setParsedCoords(null); // Reset parsed coordinates if error occurs
+      setResponse(null); // Reset the response
+    }
+  };
 
   // Function to fetch coordinates for a place name
   const fetchCoordinates = async (place) => {
@@ -52,7 +111,7 @@ const RouteForm = ({ setShowRouteDialog }) => {
         <button onClick={() => setShowRouteDialog(false)} className="text-gray-500 hover:text-gray-700">✖</button>
       </div>
       
-      <form onSubmit={handleRoutePlan} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
         {/* Starting Location */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
