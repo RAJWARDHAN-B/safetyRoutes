@@ -10,10 +10,10 @@ const ProfilePage = () => {
   });
 
   const [emergencyContacts, setEmergencyContacts] = useState([
-    { name: 'Rajwardhan', relation: 'Father', phone: '+91 9876543214' },
-    { name: 'Anannaya ', relation: 'Mother', phone: '+91 7876354111' },
-    { name: 'Shubham ', relation: 'Uncle', phone: '+91 8976543210' },
-    { name: 'Shuvayu', relation: 'Uncle', phone: '+91 986223210' },
+    { name: 'Name1', relation: 'rel1', phone: '+91 9876543214' },
+    { name: 'Name2 ', relation: 'rel2', phone: '+91 7876354111' },
+    { name: 'Name3 ', relation: 'rel3', phone: '+91 8976543210' },
+    { name: 'Name4', relation: 'rel4', phone: '+91 986223210' },
   ]);
 
   const addEmergencyContact = () => {
