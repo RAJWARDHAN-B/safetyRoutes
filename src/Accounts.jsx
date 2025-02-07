@@ -4,16 +4,16 @@ const ProfilePage = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [isEditing, setIsEditing] = useState({ name: false, email: false, phone: false });
   const [profile, setProfile] = useState({
-    name: 'Your Name',
-    email: 'abc@xyz.com',
-    phone: '+91 1234567890',
+    name: 'bhavika',
+    email: 'bhavika@gmail.com',
+    phone: '+91 9834567890',
   });
 
   const [emergencyContacts, setEmergencyContacts] = useState([
-    { name: 'Name1', relation: 'rel1', phone: '+91 9876543214' },
-    { name: 'Name2 ', relation: 'rel2', phone: '+91 7876354111' },
-    { name: 'Name3 ', relation: 'rel3', phone: '+91 8976543210' },
-    { name: 'Name4', relation: 'rel4', phone: '+91 986223210' },
+    { name: 'Anannaya', relation: 'Mother', phone: '+91 9876543214' },
+    { name: 'Shubham ', relation: 'Father', phone: '+91 7876354111' },
+    { name: 'Rajwardhan ', relation: 'Brother', phone: '+91 8976543210' },
+    { name: 'Shuvayu', relation: 'Uncle', phone: '+91 986223210' },
   ]);
 
   const addEmergencyContact = () => {
