@@ -96,6 +96,8 @@ const Map = () => {
       .bindPopup('End Point')
       .openPopup();
 
+      map.fitBounds(polyline.getBounds());
+
       // Assuming the response is a list of tuples, set the response
       if (data.route) {
         setResponse(data.route); // Store the received route
