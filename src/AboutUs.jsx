@@ -22,7 +22,7 @@ const AboutUs = () => {
             className={`relative w-13 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors duration-300 ${isLightMode ? 'bg-[#D8B4FE]' : 'bg-[#7C3AED]'}`}
             onClick={() => setIsLightMode(!isLightMode)}
           >
-            <div className={`w-5 h-5 bg-white rounded-full shadow-md transition-transform ${isLightMode ? 'translate-x-0' : 'translate-x-7'}`}></div>
+            <div className={`w-5 h-5 bg-white rounded-full shadow-md transition-transform ${isLightMode ? 'translate-x-7' : 'translate-x-0'}`}></div>
           </button>
         </div>
       </div>
