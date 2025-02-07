@@ -19,6 +19,13 @@ const Map = () => {
   const [L, setL] = useState(null);
   const [routeLayer, setRouteLayer] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
+    
+    const [startCoords, setStartCoords] = useState(null);
+    const [endCoords, setEndCoords] = useState(null);
+    const [coordString, setCoordString] = useState('');
+    const [parsedCoords, setParsedCoords] = useState(null);
+    const [error, setError] = useState('');
+    const [response, setResponse] = useState(null);
   
   
   // Popup states
@@ -32,6 +39,77 @@ const Map = () => {
   const [savedAddresses, setSavedAddresses] = useState([
     '', '', '', '', ''  // 5 empty slots
   ]);
+
+  const parseCoordinates = (coordString) => {
+    try {
+      let coords = coordString.replace(/[()]/g, "").split(",");
+      
+      // Convert string values to float
+      let lat = parseFloat(coords[0].trim());
+      let lon = parseFloat(coords[1].trim());
+
+      // Check if parsed values are valid numbers
+      if (isNaN(lat) || isNaN(lon)) {
+        throw new Error("Invalid coordinate format");
+      }
+
+      return [lat, lon]; // Return as an array of floats
+    } catch (error) {
+      throw new Error("Invalid coordinate format");
+    }
+  };
+
+  // Handle form submission and POST request to FastAPI
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent page reload
+
+    try {
+      // Parse coordinates from input string
+      const parsed_start = parseCoordinates(startLocation);
+      const parsed_end = parseCoordinates(endLocation);
+      //setParsedCoords(parsed); // Store parsed coordinates
+      setError(''); // Reset any previous errors
+
+      // Send the parsed coordinates to the FastAPI backend
+      const response = await fetch("http://127.0.0.1:8000/safe_route", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({"start": parsed_start, "end": parsed_end }), // send the parsed coordinates as origin and destination
+      });
+
+      // Parse the response JSON
+      const data = await response.json();
+      let safe_route=data["route"];
+      console.log(safe_route);
+          // Create a polyline using the coordinates and add it to the map
+    const polyline = L.polyline(safe_route, { color: 'blue', weight: 4, opacity: 0.7 }).addTo(map);
+
+    // Add a marker at the start (first coordinate)
+    const startMarker = L.marker(safe_route[0]).addTo(map)
+      .bindPopup('Start Point')
+      .openPopup();
+
+    // Add a marker at the end (last coordinate)
+    const endMarker = L.marker(safe_route[safe_route.length - 1]).addTo(map)
+      .bindPopup('End Point')
+      .openPopup();
+
+      // Assuming the response is a list of tuples, set the response
+      if (data.route) {
+        setResponse(data.route); // Store the received route
+      } else {
+        setError("Error receiving route data");
+      }
+    } catch (err) {
+      setError(err.message); // Set error message if anything goes wrong
+      setParsedCoords(null); // Reset parsed coordinates if error occurs
+      setResponse(null); // Reset the response
+    }
+  };
+
+  
   
   const [recentAddresses] = useState([
     "123 Main St, Austin, TX",
@@ -361,7 +439,59 @@ className={`absolute top-0 left-0 w-full p-2 flex items-center shadow-md z-50 tr
 
       {/* Conditionally render RouteForm when showRouteDialog is true */}
       {showRouteDialog && (
-        <RouteForm setShowRouteDialog={setShowRouteDialog} />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg z-50 w-96">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-semibold">Plan Your Route</h2>
+          <button onClick={() => setShowRouteDialog(false)} className="text-gray-500 hover:text-gray-700">✖</button>
+        </div>
+        
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Starting Location */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Starting Location (e.g., New York)
+            </label>
+            <input
+              type="text"
+              value={startLocation}
+              onChange={(e) => setStartLocation(e.target.value)}
+              placeholder="e.g., New York"
+              className="w-full p-2 border rounded"
+            />
+          </div>
+  
+          {/* Ending Location */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Destination (e.g., Los Angeles)
+            </label>
+            <input
+              type="text"
+              value={endLocation}
+              onChange={(e) => setEndLocation(e.target.value)}
+              placeholder="e.g., Los Angeles"
+              className="w-full p-2 border rounded"
+            />
+          </div>
+  
+          {/* Action buttons */}
+          <div className="flex justify-end space-x-2 pt-4">
+            <button
+              type="button"
+              onClick={() => setShowRouteDialog(false)}
+              className="px-4 py-2 border rounded hover:bg-gray-100"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Get Directions
+            </button>
+          </div>
+        </form>
+      </div>
       )}
     </div>
 
