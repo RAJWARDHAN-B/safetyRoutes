@@ -5,24 +5,27 @@ import lightMapBg from './lightmapbg.png';
 import profileIcon from './profileicon.png';
 import { motion } from 'framer-motion';
 
-const MissionPathAnimation = () => {
+const MissionPathAnimation = ({isLightMode }) => {
   return (
-    <div className="absolute inset-0 h-[500px] pointer-events-none z-10">
-      <svg className="absolute top-11/60 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[250px]" viewBox="0 0 300 150">
-        <motion.path
-          d="M20,140 L80,100 L140,140 L200,100 L260,140 L280,60"
-          fill="none"
-          stroke="#00BFFF"
-          strokeWidth="2.5"
-          strokeDasharray="10"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 3, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" }}
-        />
-        <circle cx="20" cy="140" r="5" fill="#FFDD00" />
-        <circle cx="280" cy="60" r="5" fill="#FFDD00" />
-      </svg>
-    </div>
+<div className="absolute inset-0 h-[500px] pointer-events-none z-10">
+  <svg
+    className="absolute top-11/60 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[250px]"
+    viewBox="0 0 300 150"
+  >
+    <motion.path
+      d="M20,140 L80,100 L140,140 L200,100 L260,140 L280,60"
+      fill="none"
+      stroke={isLightMode ? '#00BFFF' : '#FFDD00'}  // Light mode: Blue, Dark mode: Yellow
+      strokeWidth="2.5"
+      strokeDasharray="10"
+      initial={{ pathLength: 0 }}
+      animate={{ pathLength: 1 }}
+      transition={{ duration: 3, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" }}
+    />
+    <circle cx="20" cy="140" r="5" fill={isLightMode ? '#FFDD00' : '#00BFFF'} />
+    <circle cx="280" cy="60" r="5" fill={isLightMode ? '#FFDD00' : '#00BFFF'} />
+  </svg>
+</div>
   );
 };
 
@@ -51,7 +54,7 @@ const LandingPage = () => {
         <div className="flex space-x-10">
           <button
             className="text-white font-medium"
-            onClick={() => navigate("/how-it-works")}
+            onClick={() => navigate("/how")}
           >
             How it Works
           </button>
@@ -114,7 +117,10 @@ const LandingPage = () => {
         >
           Sign Up
         </button>
-        <button className="bg-purple-800 p-1 rounded-full hover:bg-purple-900 transition w-10 h-10 flex items-center justify-center">
+        <button 
+        onClick={() => navigate("/accounts")}
+
+        className="bg-purple-800 p-1 rounded-full hover:bg-purple-900 transition w-10 h-10 flex items-center justify-center">
           {/* <img
             src="waysecure\src\download.png"
             alt="Profile"

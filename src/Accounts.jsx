@@ -11,10 +11,9 @@ const ProfilePage = () => {
 
   const [emergencyContacts, setEmergencyContacts] = useState([
     { name: 'Rajwardhan', relation: 'Father', phone: '+91 9876543214' },
-    { name: 'anannaya ', relation: 'Mother', phone: '+91 7876354111' },
+    { name: 'Anannaya ', relation: 'Mother', phone: '+91 7876354111' },
     { name: 'Shubham ', relation: 'Uncle', phone: '+91 8976543210' },
     { name: 'Shuvayu', relation: 'Uncle', phone: '+91 986223210' },
-    
   ]);
 
   const addEmergencyContact = () => {
@@ -34,21 +33,22 @@ const ProfilePage = () => {
     setEmergencyContacts(updatedContacts);
   };
 
-  return (
+  // Function to delete an emergency contact
+  const deleteContact = (index) => {
+    const updatedContacts = emergencyContacts.filter((_, i) => i !== index);
+    setEmergencyContacts(updatedContacts);
+  };
 
+  return (
     <div className={`min-h-screen p-8 transition-colors duration-200 ${darkMode ? 'bg-slate-900 text-gray-100' : 'bg-gray-50 text-gray-900'}`}>
-        
-        
       <div className="max-w-2xl mx-auto space-y-6">
         {/* Profile Header */}
-        
         <div className="flex justify-between items-center mb-8">
-
           <div className="flex items-center gap-4">
             <div className="relative">
               <div className="w-24 h-24 rounded-full bg-blue-200 flex items-center justify-center overflow-hidden">
                 <img
-                  src="src\avatarr.png"
+                  src="src\\avatarr.png"
                   alt="Profile"
                   className="w-full h-full object-cover"
                 />
@@ -57,15 +57,15 @@ const ProfilePage = () => {
                 className="absolute bottom-0 right-0 rounded-full p-1.5 bg-white text-gray-700 shadow-md hover:bg-gray-100"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+                  <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
                 </svg>
               </button>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <label className="relative inline-flex items-center cursor-pointer">
-              <input 
-                type="checkbox" 
+              <input
+                type="checkbox"
                 className="sr-only peer"
                 checked={darkMode}
                 onChange={() => setDarkMode(!darkMode)}
@@ -74,9 +74,6 @@ const ProfilePage = () => {
             </label>
           </div>
         </div>
-        
-
-        
 
         {/* Personal Information */}
         <div className={`rounded-lg shadow-sm border ${darkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
@@ -101,7 +98,7 @@ const ProfilePage = () => {
                   onClick={() => setIsEditing({ ...isEditing, name: !isEditing.name })}
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+                    <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
                   </svg>
                 </button>
               </div>
@@ -125,7 +122,7 @@ const ProfilePage = () => {
                   onClick={() => setIsEditing({ ...isEditing, email: !isEditing.email })}
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+                    <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
                   </svg>
                 </button>
               </div>
@@ -149,7 +146,7 @@ const ProfilePage = () => {
                   onClick={() => setIsEditing({ ...isEditing, phone: !isEditing.phone })}
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+                    <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
                   </svg>
                 </button>
               </div>
@@ -166,7 +163,7 @@ const ProfilePage = () => {
               className={`px-3 py-1 rounded-md border flex items-center gap-2 ${darkMode ? 'border-slate-600 hover:bg-slate-700' : 'border-gray-200 hover:bg-gray-50'}`}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path d="M12 4v16m8-8H4" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+                <path d="M12 4v16m8-8H4" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
               </svg>
               Add Contact
             </button>
@@ -200,11 +197,10 @@ const ProfilePage = () => {
                       />
                     </div>
                     <button
+                      onClick={() => deleteContact(index)}
                       className={`p-2 rounded-md hover:${darkMode ? 'bg-slate-600' : 'bg-gray-100'}`}
                     >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
-                      </svg>
+                      🗑️
                     </button>
                   </div>
                 </div>
@@ -222,7 +218,7 @@ const ProfilePage = () => {
             <button className="w-full flex justify-between items-center text-purple-500 hover:text-purple-600 py-2">
               See all reports
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+                <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
               </svg>
             </button>
           </div>

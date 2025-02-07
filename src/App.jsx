@@ -13,6 +13,7 @@ import SignUpPage from "./SignUpPage"; // Create this page
 import Map from "./Map";
 import FileReport from "./FileReport";
 import Accounts from "./Accounts";
+import HowItWorks from "./HowitWorks";
 import AboutUs from "./AboutUs";
 import BotpressChat from "./components/botpressChat";
 
@@ -27,7 +28,9 @@ function App() {
         <Route path="/map" element={<Map/>}/>
         <Route path="/file" element={<FileReport/>}/>
         <Route path="/aboutus" element={<AboutUs/>}/>
-        <Route path="/acc" element={<Accounts/>}/>
+        <Route path="/accounts" element={<Accounts/>}/>
+        <Route path="/how" element={<HowItWorks/>}/>
+
       </Routes>
     </Router>
   );
