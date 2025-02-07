@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import darkMapBg from './assets/darkmapbg.jpg';
-import lightMapBg from './lightmapbg.jpg';
+import lightMapBg from './lightmapbg.png';
 import profileIcon from './profileicon.png';
 import { motion } from 'framer-motion';
 

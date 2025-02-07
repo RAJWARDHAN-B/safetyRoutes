@@ -27,6 +27,7 @@ function App() {
         <Route path="/map" element={<Map/>}/>
         <Route path="/file" element={<FileReport/>}/>
         <Route path="/aboutus" element={<AboutUs/>}/>
+        <Route path="/acc" element={<Accounts/>}/>
       </Routes>
     </Router>
   );
