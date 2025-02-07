@@ -4,9 +4,9 @@ const ProfilePage = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [isEditing, setIsEditing] = useState({ name: false, email: false, phone: false });
   const [profile, setProfile] = useState({
-    name: 'Bhavika',
-    email: 'bhavika.pict@gmail.com',
-    phone: '+91 9652845732',
+    name: 'Your Name',
+    email: 'abc@xyz.com',
+    phone: '+91 1234567890',
   });
 
   const [emergencyContacts, setEmergencyContacts] = useState([
