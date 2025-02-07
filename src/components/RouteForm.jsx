@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import L from 'leaflet'; // Import Leaflet
+import 'leaflet/dist/leaflet.css'; // Import Leaflet styles
 
 const RouteForm = ({ setShowRouteDialog }) => {
   const [startLocation, setStartLocation] = useState('');
@@ -48,7 +50,7 @@ const RouteForm = ({ setShowRouteDialog }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ "start": parsed_start, "end": parsed_end }), // send the parsed coordinates as origin and destination
+        body: JSON.stringify({"start": parsed_start, "end": parsed_end }), // send the parsed coordinates as origin and destination
       });
 
       // Parse the response JSON
