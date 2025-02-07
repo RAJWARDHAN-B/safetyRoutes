@@ -37,8 +37,9 @@ const RouteForm = ({ setShowRouteDialog }) => {
 
     try {
       // Parse coordinates from input string
-      const parsed = parseCoordinates(coordString);
-      setParsedCoords(parsed); // Store parsed coordinates
+      const parsed_start = parseCoordinates(startLocation);
+      const parsed_end = parseCoordinates(endLocation);
+      //setParsedCoords(parsed); // Store parsed coordinates
       setError(''); // Reset any previous errors
 
       // Send the parsed coordinates to the FastAPI backend
@@ -47,11 +48,13 @@ const RouteForm = ({ setShowRouteDialog }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ origin: parsed, destination: parsed }), // send the parsed coordinates as origin and destination
+        body: JSON.stringify({ "start": parsed_start, "end": parsed_end }), // send the parsed coordinates as origin and destination
       });
 
       // Parse the response JSON
       const data = await response.json();
+      let safe_route=data["route"];
+      console.log(safe_route);
 
       // Assuming the response is a list of tuples, set the response
       if (data.route) {

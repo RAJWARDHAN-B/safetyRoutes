@@ -1,10 +1,19 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from safe_route import get_safest_route, get_alt_routes
-
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # You can specify specific domains instead of "*"
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods: GET, POST, OPTIONS, etc.
+    allow_headers=["*"],  # Allows all headers
+)
+
 
 @app.get("/")
 def home():
