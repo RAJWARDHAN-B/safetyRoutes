@@ -108,15 +108,20 @@ const Map = () => {
       getCoordinates(startLocation);
     }
     
-    let startCoords = startLocation; 
+    let startCoords = startLocation || null; 
     try {
       // Parse coordinates from input string
       try {
         
         let endCoords = endLocation;
-    
+        if(startCoords!=null)
+          {
+            startCoords= await getCoordinates(startCoords);
+          }
+          else
+          {
         // Get user GPS coordinates for starting location
-        if (!startCoords.trim() && navigator.geolocation) {
+        if ((!startCoords||!startCoords.trim()) && navigator.geolocation) {
           await new Promise((resolve, reject) => {
             navigator.geolocation.getCurrentPosition(
               (position) => {
@@ -132,10 +137,11 @@ const Map = () => {
           });
         }
       }
+      }
       catch (error) {
         console.error("Error handling form submission:", error);}
     
-
+      
       console.log(startCoords);
       const parsed_end = await getCoordinates(endLocation);
       console.log(parsed_end);
