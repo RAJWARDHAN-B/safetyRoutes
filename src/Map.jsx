@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import RouteForm from './components/RouteForm';
 import HelpButton from './HelpButton';
 import axios from 'axios';
+import { List } from "lucide-react";
+import PoliceStationsPopup from "./PoliceStationsPopup";
 
 //import { Navigate } from "react-router-dom";
 
@@ -25,14 +27,16 @@ const Map = () => {
   const [location, setLocation] = useState("");
   const [coordinates, setCoordinates] = useState(null);
   const [error, setError] = useState(null);
+  // const [showPolicePopup, setShowPolicePopup] = useState(false);
+    
+  const [startCoords, setStartCoords] = useState(null);
+  const [endCoords, setEndCoords] = useState(null);
+  const [coordString, setCoordString] = useState('');
+  const [parsedCoords, setParsedCoords] = useState(null);
+  const [response, setResponse] = useState(null);
+  const GOOGLE_API_KEY = "AIzaSyC_UyL76JWgPVAba9PRaEPvwxhLFDQUKDM";
 
     
-    const [startCoords, setStartCoords] = useState(null);
-    const [endCoords, setEndCoords] = useState(null);
-    const [coordString, setCoordString] = useState('');
-    const [parsedCoords, setParsedCoords] = useState(null);
-    const [response, setResponse] = useState(null);
-    const GOOGLE_API_KEY = "AIzaSyC_UyL76JWgPVAba9PRaEPvwxhLFDQUKDM"; 
   
   
     const getCoordinates = async (location) => {
@@ -46,9 +50,10 @@ const Map = () => {
   
         if (response.data.results.length > 0) {
           const { lat, lng } = response.data.results[0].geometry.location;
-          setCoordinates([parseFloat(lat), parseFloat(lng)]);
-          console.log(coordinates.lat,coordinates.lng);
+          const coords = [lat, lng];
+          setCoordinates({lat, lng});
           setError(null);
+          return coords;
         } else {
           setError("Location not found.");
           setCoordinates(null);
@@ -73,6 +78,7 @@ const Map = () => {
     '', '', '', '', ''  // 5 empty slots
   ]);
 
+
   const parseCoordinates = (coordString) => {
     try {
       let coords = coordString.replace(/[()]/g, "").split(",");
@@ -96,18 +102,51 @@ const Map = () => {
   const handleSubmit = async (e) => {
     setShowRouteDialog(false)
     e.preventDefault();
-    if (startLocation.trim()) {
+
+    if(location.trim())
+    {
       getCoordinates(startLocation);
     }
-
+    
+    let startCoords = startLocation || null; 
     try {
       // Parse coordinates from input string
-      const parsed_start = parseCoordinates(startLocation);
-      const parsed_end = parseCoordinates(endLocation);
+      try {
+        
+        let endCoords = endLocation;
+        if(startCoords!=null)
+          {
+            startCoords= await getCoordinates(startCoords);
+          }
+          else
+          {
+        // Get user GPS coordinates for starting location
+        if ((!startCoords||!startCoords.trim()) && navigator.geolocation) {
+          await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                startCoords = [parseFloat(position.coords.latitude), parseFloat(position.coords.longitude)];
+                resolve();
+              },
+              (error) => {
+                console.error("Error getting start location:", error);
+                reject(error);
+              },
+              { enableHighAccuracy: true }
+            );
+          });
+        }
+      }
+      }
+      catch (error) {
+        console.error("Error handling form submission:", error);}
+    
+      
+      console.log(startCoords);
+      const parsed_end = await getCoordinates(endLocation);
+      console.log(parsed_end);
       //setParsedCoords(parsed); // Store parsed coordinates
       setError(''); // Reset any previous errors
-
-        
 
       // Send the parsed coordinates to the FastAPI backend
       const response = await fetch("http://127.0.0.1:8000/safe_route", {
@@ -115,7 +154,7 @@ const Map = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({"start": parsed_start, "end": parsed_end }), // send the parsed coordinates as origin and destination
+        body: JSON.stringify({"start": startCoords, "end": parsed_end }), // send the parsed coordinates as origin and destination
       });
 
       const alt_response = await fetch("http://127.0.0.1:8000/alt_route", {
@@ -123,10 +162,33 @@ const Map = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({"start": parsed_start, "end": parsed_end }), // send the parsed coordinates as origin and destination
+        body: JSON.stringify({"start": startCoords, "end": parsed_end }), // send the parsed coordinates as origin and destination
       });
       const alt_data=await alt_response.json();
-      let alt_route=alt_data["route"];   //alt response for alt routes
+      let alt_route = [];
+      if(Object.keys(alt_data).length==1)
+      {
+        alt_route.push(alt_data["route"]);
+      } 
+      
+      else if(Object.keys(alt_data).length==2)
+        {
+          alt_route.push(alt_data["route-1"]);
+          alt_route.push(alt_data["route-2"]);
+        }  
+
+      else if(Object.keys(alt_data).length==3)
+        {
+          alt_route.push(alt_data["route-1"]);
+          alt_route.push(alt_data["route-2"]);
+          alt_route.push(alt_data["route-3"]);
+        } 
+        
+      else if(Object.keys(alt_data).length==0)
+          {
+            alt_route.push([]);
+          } 
+      
 
       // Parse the response JSON
       const data = await response.json();
@@ -140,18 +202,23 @@ const Map = () => {
       
           // Initialize the user path polyline
           var fixedRoute = safe_route;
-    
+
+      
         // Draw the fixed route on the map
         var routePolyline = L.polyline(fixedRoute, { color: 'green', weight: 4, opacity:0.8}).addTo(map);
-        var altroutePolyline = L.polyline(alt_route, { color: 'blue', weight: 4, opacity:0.7 }).addTo(map);
+        //var altroutePolyline = L.polyline(alt_route, { color: 'blue', weight: 4, opacity:0.7 }).addTo(map);
+        alt_route.forEach(function(route){
+          var altroutePolyline = L.polyline(route, { color: 'blue', weight: 4, opacity:0.7 }).addTo(map);
+        });
+      
         // Marker for the user
-        //var userMarker = L.circleMarker([0, 0]).addTo(map).bindPopup("You are here");
+        
       
         var userMarker = L.circleMarker([0, 0]).addTo(map);
         // Polyline for the user's movement (blue)
         var userPolyline = L.polyline([], { color: 'blue', weight: 4 }).addTo(map);
         
-    
+        
         // Track user’s movement
         function updateUserLocation(position) {
             var lat = position.coords.latitude;
@@ -193,7 +260,7 @@ const Map = () => {
       .bindPopup('Start Point')
       .openPopup();
 
-      const endMarker = L.marker(alt_route[alt_route.length-1], 
+      const endMarker = L.marker(safe_route[safe_route.length-1], 
         {
           colorFill:'blue'
         }
@@ -424,20 +491,20 @@ const PhonePopup = ({ darkMode }) => (
 </div>
 );
 
-const PoliceStationsPopup = ({ darkMode }) => (
-<div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
-  ${darkMode ? "bg-gray-800 text-gray-200 border-gray-600" : "bg-gray-100 text-gray-900 border-gray-300"} 
-  p-6 rounded-lg shadow-lg z-50 w-96 border`}>
-  <div className="flex justify-between items-center mb-4">
-    <h2 className="text-lg font-semibold">Nearby Police Stations</h2>
-    <button onClick={() => setShowPolicePopup(false)} className={`${darkMode ? "text-gray-400 hover:text-gray-300" : "text-gray-500 hover:text-gray-700"}`}>✖</button>
-  </div>
-  <div className={`text-center p-4 ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
-    <p>Fetching nearby police stations...</p>
-    <p className={`text-sm mt-2 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>This feature would integrate with a real police station API</p>
-  </div>
-</div>
-);
+// const PoliceStationsPopup = ({ darkMode }) => (
+// <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
+//   ${darkMode ? "bg-gray-800 text-gray-200 border-gray-600" : "bg-gray-100 text-gray-900 border-gray-300"} 
+//   p-6 rounded-lg shadow-lg z-50 w-96 border`}>
+//   <div className="flex justify-between items-center mb-4">
+//     <h2 className="text-lg font-semibold">Nearby Police Stations</h2>
+//     <button onClick={() => setShowPolicePopup(false)} className={`${darkMode ? "text-gray-400 hover:text-gray-300" : "text-gray-500 hover:text-gray-700"}`}>✖</button>
+//   </div>
+//   <div className={`text-center p-4 ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+//     <p>Fetching nearby police stations...</p>
+//     <p className={`text-sm mt-2 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>This feature would integrate with a real police station API</p>
+//   </div>
+// </div>
+// );
 
 // Update the Route Planning Dialog with dark mode
 {showRouteDialog && (
@@ -449,59 +516,6 @@ const PoliceStationsPopup = ({ darkMode }) => (
     <button onClick={() => setShowRouteDialog(false)} 
       className={`${darkMode ? "text-gray-400 hover:text-gray-300" : "text-gray-500 hover:text-gray-700"}`}>✖</button>
   </div>
-  
-  {/* <form onSubmit={handleRoutePlan} className="space-y-4">
-    <div>
-      <label className={`block text-sm font-medium mb-1 ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
-        Starting Location (latitude, longitude)
-      </label>
-      <input
-        type="text"
-        value={startLocation}
-        onChange={(e) => setStartLocation(e.target.value)}
-        placeholder="e.g., -97.7431,30.2672"
-        className={`w-full p-2 border rounded ${
-          darkMode ? "bg-black-700 text-gray-200 border-gray-600" : "bg-white text-gray-900 border-gray-300"
-        }`}
-      />
-    </div>
-
-    <div>
-      <label className={`block text-sm font-medium mb-1 ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
-        Destination (latitude, longitude)
-      </label>
-      <input
-        type="text"
-        value={endLocation}
-        onChange={(e) => setEndLocation(e.target.value)}
-        placeholder="e.g., -95.3698,29.7604"
-        className={`w-full p-2 border rounded ${
-          darkMode ? "bg-black-700 text-gray-200 border-gray-600" : "bg-white text-gray-900 border-gray-300"
-        }`}
-      />
-    </div>
-
-    <div className="flex justify-end space-x-2 pt-4">
-      <button
-        type="button"
-        onClick={() => setShowRouteDialog(false)}
-        className={`px-4 py-2 border rounded ${
-          darkMode 
-            ? "bg-gray-700 text-gray-200 border-gray-600 hover:bg-black-600" 
-            : "bg-white text-gray-900 border-gray-300 hover:bg-gray-100"
-        }`}
-      >
-        Cancel
-      </button>
-      <button
-
-        type="submit"
-        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-      >
-        Get Directions
-      </button>
-    </div>
-  </form> */}
 </div>
 )}
 
@@ -672,11 +686,13 @@ ${darkMode ? "bg-gray-900 text-gray-200" : "bg-white text-gray-900"}`}>
     onClick={() => setShowPhonePopup(true)}>
     📞 {sidebarOpen && <span className="ml-2">Phone</span>}
   </button>
-  <button className={`p-3 flex items-center w-full transition-colors duration-200 
-    ${darkMode ? "hover:bg-gray-700 text-gray-300" : "hover:bg-gray-200 text-gray-900"}`} 
-    onClick={() => setShowPolicePopup(true)}>
-    🚔 {sidebarOpen && <span className="ml-2">Police Stations</span>}
+  <button 
+          className={`p-3 flex items-center w-full transition-colors duration-200 
+            ${darkMode ? "hover:bg-gray-700 text-gray-300" : "hover:bg-gray-200 text-gray-900"}`} 
+          onClick={() => setShowPolicePopup(true)}>
+          🚔 {sidebarOpen && <span className="ml-2">Police Stations</span>}
   </button>
+  
 </nav>
 </div>
 
