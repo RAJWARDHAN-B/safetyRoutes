@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import RouteForm from './components/RouteForm';
 import HelpButton from './HelpButton';
+import axios from 'axios';
+
 //import { Navigate } from "react-router-dom";
 
 
@@ -20,15 +22,45 @@ const Map = () => {
   const [L, setL] = useState(null);
   const [routeLayer, setRouteLayer] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
+  const [location, setLocation] = useState("");
+  const [coordinates, setCoordinates] = useState(null);
+  const [error, setError] = useState(null);
+
     
     const [startCoords, setStartCoords] = useState(null);
     const [endCoords, setEndCoords] = useState(null);
     const [coordString, setCoordString] = useState('');
     const [parsedCoords, setParsedCoords] = useState(null);
-    const [error, setError] = useState('');
     const [response, setResponse] = useState(null);
+    const GOOGLE_API_KEY = "AIzaSyC_UyL76JWgPVAba9PRaEPvwxhLFDQUKDM"; 
   
   
+    const getCoordinates = async (location) => {
+      try {
+        const response = await axios.get("https://maps.googleapis.com/maps/api/geocode/json", {
+          params: {
+            address: location,
+            key: GOOGLE_API_KEY,
+          },
+        });
+  
+        if (response.data.results.length > 0) {
+          const { lat, lng } = response.data.results[0].geometry.location;
+          setCoordinates([parseFloat(lat), parseFloat(lng)]);
+          console.log(coordinates.lat,coordinates.lng);
+          setError(null);
+        } else {
+          setError("Location not found.");
+          setCoordinates(null);
+        }
+      } catch (err) {
+        setError("Error fetching data. Please try again.");
+        setCoordinates(null);
+      }
+    };
+
+    
+
   // Popup states
   const [showSavedPopup, setShowSavedPopup] = useState(false);
   const [showRecentPopup, setShowRecentPopup] = useState(false);
@@ -63,7 +95,10 @@ const Map = () => {
   // Handle form submission and POST request to FastAPI
   const handleSubmit = async (e) => {
     setShowRouteDialog(false)
-    e.preventDefault(); // Prevent page reload
+    e.preventDefault();
+    if (startLocation.trim()) {
+      getCoordinates(startLocation);
+    }
 
     try {
       // Parse coordinates from input string
