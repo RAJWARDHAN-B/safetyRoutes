@@ -61,6 +61,7 @@ const Map = () => {
 
   // Handle form submission and POST request to FastAPI
   const handleSubmit = async (e) => {
+    setShowRouteDialog(false)
     e.preventDefault(); // Prevent page reload
 
     try {
@@ -87,7 +88,11 @@ const Map = () => {
     const polyline = L.polyline(safe_route, { color: 'blue', weight: 4, opacity: 0.7 }).addTo(map);
 
     // Add a marker at the start (first coordinate)
-    const startMarker = L.marker(safe_route[0]).addTo(map)
+    const startMarker = L.circleMarker(safe_route[0], 
+      {
+        colorFill:'red'
+      }
+    ).addTo(map)
       .bindPopup('Start Point')
       .openPopup();
 
@@ -231,6 +236,8 @@ const Map = () => {
       console.error('Error calculating route:', error);
       alert('Error calculating route. Please check your coordinates and try again.');
     }
+    
+
   };
 
   const handleSaveAddress = (index, address) => {
@@ -337,7 +344,7 @@ const PoliceStationsPopup = ({ darkMode }) => (
       className={`${darkMode ? "text-gray-400 hover:text-gray-300" : "text-gray-500 hover:text-gray-700"}`}>✖</button>
   </div>
   
-  <form onSubmit={handleRoutePlan} className="space-y-4">
+  {/* <form onSubmit={handleRoutePlan} className="space-y-4">
     <div>
       <label className={`block text-sm font-medium mb-1 ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
         Starting Location (latitude, longitude)
@@ -381,13 +388,14 @@ const PoliceStationsPopup = ({ darkMode }) => (
         Cancel
       </button>
       <button
+
         type="submit"
         className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
       >
         Get Directions
       </button>
     </div>
-  </form>
+  </form> */}
 </div>
 )}
 
