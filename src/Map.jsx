@@ -164,7 +164,7 @@ const Map = () => {
       // Parse the response JSON
       const data = await response.json();
       let safe_route=data["route"]; 
-      
+      console.log(safe_route);
       
           // Create a polyline using the coordinates and add it to the map
           var endLat = parsed_end[0];  // Example: San Francisco
@@ -179,7 +179,7 @@ const Map = () => {
         var routePolyline = L.polyline(fixedRoute, { color: 'green', weight: 4, opacity:0.8}).addTo(map);
         //var altroutePolyline = L.polyline(alt_route, { color: 'blue', weight: 4, opacity:0.7 }).addTo(map);
         alt_route.forEach(function(route){
-          var altroutePolyline = L.polyline(route, { color: 'blue', weight: 4, opacity:0.4 }).addTo(map);
+          var altroutePolyline = L.polyline(route, { color: 'blue', weight: 4, opacity:0.7 }).addTo(map);
         });
       
         // Marker for the user
