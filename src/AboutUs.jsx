@@ -19,9 +19,9 @@ const AboutUs = () => {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex space-x-6 relative right-12">
-          <Link to="/how-it-works" className={`font-medium ${isLightMode ? 'text-gray-800' : 'text-white'}`}>How it Works</Link>
-          <Link to="/file" className={`font-medium ${isLightMode ? 'text-gray-800' : 'text-white'}`}>File a Report</Link>
-          <Link to="/about-us" className={`font-medium ${isLightMode ? 'text-gray-800' : 'text-white'}`}>About Us</Link>
+          <Link to="/how" className={`font-medium text-gray-600 cursor-pointer hover:underline hover:underline-offset-4 hover:text-yellow-500 hover:decoration-yellow-500 ${isLightMode ? 'text-gray-800' : 'text-white'}`}>How it Works</Link>
+          <Link to="/file" className={`font-medium text-gray-600 cursor-pointer hover:underline hover:underline-offset-4 hover:text-yellow-500 hover:decoration-yellow-500 ${isLightMode ? 'text-gray-800' : 'text-white'}`}>File a Report</Link>
+          <Link to="/about-us" className={`font-medium text-gray-600 cursor-pointer hover:underline hover:underline-offset-4 hover:text-yellow-500 hover:decoration-yellow-500 ${isLightMode ? 'text-gray-800' : 'text-white'}`}>About Us</Link>
         </div>
 
         {/* Mobile Menu Button */}

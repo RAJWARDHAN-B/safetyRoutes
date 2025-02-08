@@ -23,7 +23,7 @@ const Map = () => {
   const [map, setMap] = useState(null);
   const [L, setL] = useState(null);
   const [routeLayer, setRouteLayer] = useState(null);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
   const [location, setLocation] = useState("");
   const [coordinates, setCoordinates] = useState(null);
   const [error, setError] = useState(null);
@@ -182,7 +182,7 @@ const Map = () => {
         body: JSON.stringify({"start": startCoords, "end": parsed_end }), // send the parsed coordinates as origin and destination
       });
 
-      const alt_response = await fetch("http://127.0.0.1:8000/alt_route", {
+      const alt_response = await fetch("http://127.0.0.1:800/alt_route", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -672,7 +672,7 @@ className={`absolute top-0 left-0 w-full p-2 flex items-center shadow-md z-50 tr
    >
      <div
        className={`w-6 h-6 bg-white rounded-full shadow-md transform transition-transform duration-300 ${
-         darkMode ? "translate-x-7" : "translate-x-0"
+         darkMode ? "translate-x-0" : "translate-x-7"
        }`}
      ></div>
    </button>
@@ -691,7 +691,7 @@ ${darkMode ? "bg-gray-900 text-gray-200" : "bg-white text-gray-900"}`}>
 {/* Navigation Menu */}
 <nav className="flex flex-col w-full p-2">
     <Link
-        to="/"
+        to="/LandingPage2"
         className={`p-3 flex items-center w-full transition-colors duration-200 z-20 
         ${darkMode ? "hover:bg-gray-700 text-gray-300" : "hover:bg-gray-200 text-gray-900"}`}
       >
