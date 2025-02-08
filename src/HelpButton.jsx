@@ -43,7 +43,7 @@ const HelpButton = () => {
       </button>
 
       {showDialog && (
-        <div className="absolute top-full left-0 mt-2 p-4 bg-white rounded shadow-lg z-30">
+        <div className="absolute top-full right-6 mt-2 p-4 bg-white rounded shadow-lg z-30">
           <input
             type="text"
             placeholder="Phone Number"

@@ -691,7 +691,7 @@ ${darkMode ? "bg-gray-900 text-gray-200" : "bg-white text-gray-900"}`}>
 
       {/* Bottom Right Buttons */}
     {/* Bottom Right Buttons */}
-    <div className="absolute bottom-7 right-5 flex flex-col gap-4 z-20">
+<div className="absolute bottom-7 right-5 flex flex-col gap-4 z-20">
 {/* HELP Button */}
   {/* <button
   //onClick={() => setShowRouteDialog(false)}
