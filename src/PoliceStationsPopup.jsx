@@ -8,6 +8,8 @@ const PoliceStationsPopup = ({ darkMode, setShowPolicePopup }) => {
 
   const GOOGLE_API_KEY = "AIzaSyC_UyL76JWgPVAba9PRaEPvwxhLFDQUKDM"; // Replace with your actual Google API key
 
+
+
   // Fetch police stations based on the user's current location
   useEffect(() => {
     if (navigator.geolocation) {
@@ -29,7 +31,18 @@ const PoliceStationsPopup = ({ darkMode, setShowPolicePopup }) => {
             );
 
             if (response.data.results.length > 0) {
-              setPoliceStations(response.data.results);
+              // Sort the police stations by their distance to the current location
+              const sortedStations = response.data.results.map((station) => {
+                const distance = getDistance(
+                  latitude,
+                  longitude,
+                  station.geometry.location.lat,
+                  station.geometry.location.lng
+                );
+                return { ...station, distance };
+              }).sort((a, b) => a.distance - b.distance);
+
+              setPoliceStations([sortedStations[0]]); // Only keep the nearest one
             } else {
               setError("No nearby police stations found.");
             }
@@ -50,6 +63,20 @@ const PoliceStationsPopup = ({ darkMode, setShowPolicePopup }) => {
     }
   }, []);
 
+  // Function to calculate the distance between two geographical coordinates
+  const getDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // Earth radius in km
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) *
+        Math.cos(lat2 * (Math.PI / 180)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distance in km
+  };
+
   return (
     <div
       className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
@@ -57,7 +84,7 @@ const PoliceStationsPopup = ({ darkMode, setShowPolicePopup }) => {
       p-6 rounded-lg shadow-lg z-50 w-96 border`}
     >
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold">Nearby Police Stations</h2>
+        <h2 className="text-lg font-semibold">Nearest Police Station</h2>
         <button
           onClick={() => setShowPolicePopup(false)} // Close the popup
           className={`${darkMode ? "text-gray-400 hover:text-gray-300" : "text-gray-500 hover:text-gray-700"}`}
@@ -73,12 +100,12 @@ const PoliceStationsPopup = ({ darkMode, setShowPolicePopup }) => {
           <p>{error}</p>
         ) : (
           <div>
-            {policeStations.map((station, index) => (
-              <div key={index} className="mb-2">
-                <h3 className="text-sm font-semibold">{station.name}</h3>
-                <p className="text-sm">{station.vicinity}</p>
+            {policeStations.length > 0 && (
+              <div className="mb-2">
+                <h3 className="text-sm font-semibold">{policeStations[0].name}</h3>
+                <p className="text-sm">{policeStations[0].vicinity}</p>
               </div>
-            ))}
+            )}
           </div>
         )}
       </div>
