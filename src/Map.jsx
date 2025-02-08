@@ -605,13 +605,13 @@ className={`absolute top-0 left-0 w-full p-2 flex items-center shadow-md z-50 tr
           {/* Starting Location */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Starting Location Coordinates
+              Enter your starting location
             </label>
             <input
               type="text"
               value={startLocation}
               onChange={(e) => setStartLocation(e.target.value)}
-              placeholder="e.g., 40.7128,74.0060"
+              placeholder="e.g., New York"
               className="w-full p-2 border rounded"
             />
           </div>
@@ -619,13 +619,13 @@ className={`absolute top-0 left-0 w-full p-2 flex items-center shadow-md z-50 tr
           {/* Ending Location */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Destination Coordinates
+              Destination location
             </label>
             <input
               type="text"
               value={endLocation}
               onChange={(e) => setEndLocation(e.target.value)}
-              placeholder="e.g., 40.9115,73.7824"
+              placeholder="e.g., Los Angeles"
               className="w-full p-2 border rounded"
             />
           </div>
