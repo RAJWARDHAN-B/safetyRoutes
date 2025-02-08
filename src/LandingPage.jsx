@@ -5,6 +5,62 @@ import lightMapBg from './lightmapbg.png';
 import profileIcon from './profileicon.png';
 import { motion } from 'framer-motion';
 
+// Translations for all text content
+const translations = {
+  en: {
+    howItWorks: "How it Works",
+    fileReport: "File a Report",
+    aboutUs: "About Us",
+    login: "Login",
+    signUp: "Sign Up",
+    title: "WaySecure",
+    mission: "Our mission is to help you travel with Confidence",
+    getDirections: "Get Directions",
+    footer: "Designed and developed by team HackElite",
+    safetyTip: "Safety Tip:",
+    english: "English",
+    hindi: "हिंदी"
+  },
+  hi: {
+    howItWorks: "यह कैसे काम करता है",
+    fileReport: "रिपोर्ट दर्ज करें",
+    aboutUs: "हमारे बारे में",
+    login: "लॉग इन करें",
+    signUp: "साइन अप करें",
+    title: "वेसिक्योर",
+    mission: "हमारा मिशन आपको विश्वास के साथ यात्रा करने में मदद करना है",
+    getDirections: "दिशा-निर्देश प्राप्त करें",
+    footer: "टीम हैकएलीट द्वारा डिज़ाइन और विकसित",
+    safetyTip: "सुरक्षा टिप:",
+    english: "English",
+    hindi: "हिंदी"
+  }
+};
+
+// Safety tips in both languages
+const safetyTips = {
+  en: [
+    "Stay aware of your surroundings while traveling",
+    "Share your location with trusted contacts",
+    "Keep emergency numbers saved offline",
+    "Stick to well-lit and populated routes",
+    "Trust your instincts - if something feels off, take a different path",
+    "Plan your route ahead of time",
+    "Keep your valuables secure and out of sight",
+    "Stay in contact with friends or family during travel"
+  ],
+  hi: [
+    "यात्रा करते समय अपने आस-पास के वातावरण के प्रति सचेत रहें",
+    "विश्वसनीय संपर्कों के साथ अपना स्थान साझा करें",
+    "आपातकालीन नंबर ऑफ़लाइन सेव करें",
+    "अच्छी रोशनी वाले और भीड़-भाड़ वाले मार्गों पर चलें",
+    "अपनी अंतर्ज्ञान पर भरोसा करें - अगर कुछ गलत लगता है, तो दूसरा रास्ता चुनें",
+    "पहले से अपना रास्ता तय करें",
+    "अपनी कीमती वस्तुओं को सुरक्षित और दृष्टि से दूर रखें",
+    "यात्रा के दौरान दोस्तों या परिवार के संपर्क में रहें"
+  ]
+};
+
 const CloseIcon = () => (
   <svg 
     width="16" 
@@ -23,33 +79,22 @@ const CloseIcon = () => (
   </svg>
 );
 
-const SafetyTipsPopup = ({ isLightMode }) => {
+const SafetyTipsPopup = ({ isLightMode, currentLang }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [currentTipIndex, setCurrentTipIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-
-  const safetyTips = [
-    "Stay aware of your surroundings while traveling",
-    "Share your location with trusted contacts",
-    "Keep emergency numbers saved offline",
-    "Stick to well-lit and populated routes",
-    "Trust your instincts - if something feels off, take a different path",
-    "Plan your route ahead of time",
-    "Keep your valuables secure and out of sight",
-    "Stay in contact with friends or family during travel"
-  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
       setIsTransitioning(true);
       setTimeout(() => {
-        setCurrentTipIndex((prev) => (prev + 1) % safetyTips.length);
+        setCurrentTipIndex((prev) => (prev + 1) % safetyTips[currentLang].length);
         setIsTransitioning(false);
       }, 500);
     }, 4000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [currentLang]);
 
   if (!isVisible) return null;
 
@@ -64,13 +109,13 @@ const SafetyTipsPopup = ({ isLightMode }) => {
           <h4 className={`text-sm font-semibold mb-1 ${
             isLightMode ? 'text-gray-900' : 'text-gray-100'
           }`}>
-            Safety Tip:
+            {translations[currentLang].safetyTip}
           </h4>
           <div className="relative h-15">
             <p className={`text-sm absolute w-full transition-all duration-500 ${
               isTransitioning ? 'opacity-0 transform -translate-y-2' : 'opacity-100 transform translate-y-0'
-            } ${isLightMode ? 'text-blue-900' : 'text-gray-300'}`}>
-              {safetyTips[currentTipIndex]}
+            } ${isLightMode ? 'text-blue-00' : 'text-gray-300'}`}>
+              {safetyTips[currentLang][currentTipIndex]}
             </p>
           </div>
         </div>
@@ -85,14 +130,13 @@ const SafetyTipsPopup = ({ isLightMode }) => {
           <CloseIcon />
         </button>
       </div>
-      {/* Progress bar */}
       <div className="mt-3 h-1 w-50 bg-gray-200 rounded-full overflow-hidden">
         <div 
           className={`h-full transition-all duration-300 ${
             isLightMode ? 'bg-blue-500' : 'bg-yellow-500'
           }`}
           style={{
-            width: `${((currentTipIndex % safetyTips.length) / (safetyTips.length - 1)) * 100}%`
+            width: `${((currentTipIndex % safetyTips[currentLang].length) / (safetyTips[currentLang].length - 1)) * 100}%`
           }}
         />
       </div>
@@ -127,9 +171,13 @@ const MissionPathAnimation = ({ isLightMode }) => {
 const LandingPage = () => {
   const navigate = useNavigate();
   const [isLightMode, setIsLightMode] = useState(false);
+  const [currentLang, setCurrentLang] = useState('en'); // Default language set to English
+
+  const t = translations[currentLang];
 
   return (
     <div className={`flex flex-col min-h-screen transition-colors duration-300 relative ${isLightMode ? "bg-gray-100" : "bg-[#0A0F1F]"}`}>
+      {/* Background elements */}
       {!isLightMode && (
         <>
           <div className="absolute inset-0 bg-cover bg-center z-0" style={{ backgroundImage: `url(${darkMapBg})` }}></div>
@@ -143,9 +191,8 @@ const LandingPage = () => {
         </>
       )}
 
-      {/* Navbar */}
+      {/* Navigation Menu */}
       <div className="absolute top-2 left-105 right-0 flex items-center p-4 z-30 text-xl">
-        {/* Navigation Links on the Left */}
         <div className="flex space-x-10">
           <button
             className={`font-medium transition-all duration-300 
@@ -155,7 +202,7 @@ const LandingPage = () => {
             }`}
             onClick={() => navigate("/how")}
           >
-            How it Works
+            {t.howItWorks}
           </button>
           <button
             className={`font-medium transition-all duration-300 
@@ -165,7 +212,7 @@ const LandingPage = () => {
             }`}
             onClick={() => navigate("/file")}
           >
-            File a Report
+            {t.fileReport}
           </button>
           <button
             className={`font-medium transition-all duration-300 
@@ -175,27 +222,62 @@ const LandingPage = () => {
             }`}
             onClick={() => navigate("/aboutus")}
           >
-            About Us
+            {t.aboutUs}
           </button>
         </div>
-        <div className="flex-grow"></div>
-        <div className="flex items-center">
-          <button
-            className={`relative w-13 h-6 flex items-center right-60 rounded-full p-1 cursor-pointer transition-colors duration-300 ${isLightMode ? "bg-[#D8B4FE]" : "bg-[#7C3AED]"}`}
-            onClick={() => setIsLightMode(!isLightMode)}
-          >
-            <div className={`w-5 h-5 bg-white rounded-full shadow-md transition-transform ${isLightMode ? "translate-x-7" : "translate-x-0"}`}></div>
-          </button>
-        </div>
-      </div>  
+      </div>
 
-      <div className={`absolute top-5 left-7 text-3xl font-extrabold transition-all z-30 ${isLightMode ? "text-gray-900" : "text-[#EAEAEA]"}`}>WaySecure</div>
-      
+      {/* Logo */}
+      <div className={`absolute top-5 left-7 text-3xl font-extrabold transition-all z-30 ${isLightMode ? "text-gray-900" : "text-[#EAEAEA]"}`}>
+        {t.title}
+      </div>
+
+      {/* User Controls */}
+      <div className="absolute top-4 right-4 flex items-center space-x-4 z-30">
+        <button
+          className={`w-20 h-8 text-sm rounded-md transition font-medium
+            ${isLightMode
+              ? "bg-[#D8B4FE] text-black hover:bg-[#C084FC]"
+              : "bg-gradient-to-b from-[#A855F7] to-[#7C3AED] text-white hover:from-[#C084FC] hover:to-[#9333EA]"
+            }`}
+          onClick={() => navigate("/login")}
+        >
+          {t.login}
+        </button>
+        <button
+          className={`w-20 h-8 text-sm rounded-md transition font-medium
+            ${isLightMode
+              ? "bg-[#D8B4FE] text-black hover:bg-[#C084FC]"
+              : "bg-gradient-to-b from-[#A855F7] to-[#7C3AED] text-white hover:from-[#C084FC] hover:to-[#9333EA]"
+            }`}
+          onClick={() => navigate("/signup")}
+        >
+          {t.signUp}
+        </button>
+        <button
+          onClick={() => navigate("/accounts")}
+          className={`p-1 rounded-full w-8 h-8 flex items-center justify-center transition-colors duration-300 
+            ${isLightMode ? 'bg-[#D8B4FE] hover:bg-[#C084FC]' : 'bg-purple-800 hover:bg-purple-900'}`}
+        >
+          <img src={profileIcon} alt='profile' className="w-full h-full object-cover rounded-full" />
+        </button>
+        <button
+          className={`relative w-12 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors duration-300 ${isLightMode ? "bg-[#D8B4FE]" : "bg-[#7C3AED]"}`}
+          onClick={() => setIsLightMode(!isLightMode)}
+        >
+          <div className={`w-4 h-4 bg-white rounded-full shadow-md transition-transform ${isLightMode ? "translate-x-6" : "translate-x-0"}`}></div>
+        </button>
+      </div>
+
+      {/* Main Content */}
       <div className={`flex-1 flex flex-col items-center justify-center text-center px-6 ${isLightMode ? "bg-gray-100" : "bg-gradient-to-b from-[#1C1C1C] to-[#0A0A0A]"}`}>
-        <h1 className={`text-5xl font-bold transition-all z-20 ${isLightMode ? "text-gray-900" : "text-gray-300"}`}>WaySecure</h1>
-        <p className={`mt-3 text-xl transition-all z-20 ${isLightMode ? "text-gray-700" : "text-gray-400"}`}>Our mission is to help you travel with Confidence</p>
+        <h1 className={`text-5xl font-bold transition-all z-20 ${isLightMode ? "text-gray-900" : "text-gray-300"}`}>
+          {t.title}
+        </h1>
+        <p className={`mt-3 text-xl transition-all z-20 ${isLightMode ? "text-gray-700" : "text-gray-400"}`}>
+          {t.mission}
+        </p>
         
-        {/* Get Directions Button */}
         <button
           className={`mt-6 px-20 py-2 text-sm font-semibold rounded-md transition-all z-20
             ${isLightMode
@@ -204,46 +286,32 @@ const LandingPage = () => {
             }`}
           onClick={() => navigate("/map")}
         >
-          Get Directions
+          {t.getDirections}
         </button>
       </div>
 
-      <div className="absolute top-6 right-5 flex space-x-4 z-30">
-        <button
-          className={`w-18 h-7.5 text-sm rounded-md transition font-medium px-4 py-1
-            ${isLightMode
-              ? "bg-[#D8B4FE] text-black hover:bg-[#C084FC]"
-              : "bg-gradient-to-b from-[#A855F7] to-[#7C3AED] text-white hover:from-[#C084FC] hover:to-[#9333EA]"
-            }`}
-          onClick={() => navigate("/login")}
-        >
-          Login
-        </button>
+      {/* Safety Tips Component */}
+      <SafetyTipsPopup isLightMode={isLightMode} currentLang={currentLang} />
 
-        <button
-          className={`w-18 h-7.5 text-sm rounded-md transition font-medium px-4 py-1
-            ${isLightMode
-              ? "bg-[#D8B4FE] text-black hover:bg-[#C084FC]"
-              : "bg-gradient-to-b from-[#A855F7] to-[#7C3AED] text-white hover:from-[#C084FC] hover:to-[#9333EA]"
-            }`}
-          onClick={() => navigate("/signup")}
-        >
-          Sign Up
-        </button>
-        <button
-          onClick={() => navigate("/accounts")}
-          className={`p-1 rounded-full w-10 h-10 flex items-center justify-center transition-colors duration-300 
-            ${isLightMode ? 'bg-[#D8B4FE] hover:bg-[#C084FC]' : 'bg-purple-800 hover:bg-purple-900'}`}
-        >
-          <img src={profileIcon} alt='profile' className="w-full h-full object-cover rounded-full" />
-        </button>
-      </div>
+      {/* Footer */}
+      <footer className={`w-full text-center py-3 mt-5 z-60 ${isLightMode ? "bg-gray-200 text-gray-800" : "bg-[#1C1C1C] text-gray-400"}`}>
+  <div className="flex justify-center items-center space-x-4">
+    <p>{t.footer}</p>
+    <div className="flex space-x-2">
+      <button 
+        onClick={() => setCurrentLang('en')} 
+        className="text-gray-500 hover:underline hover:text-gray-700 transition">
+        English
+      </button>
+      <button 
+        onClick={() => setCurrentLang('hi')} 
+        className="text-gray-500 hover:underline hover:text-gray-700 transition">
+        हिंदी
+      </button>
+    </div>
+  </div>
+</footer>
 
-      <SafetyTipsPopup isLightMode={isLightMode} />
-
-      <footer className={`w-full text-center py-2 mt-5 z-60 ${isLightMode ? "bg-gray-200 text-gray-800" : "bg-[#1C1C1C] text-gray-400"}`}>
-        Designed and developed by team HackElite
-      </footer>
     </div>
   );
 };

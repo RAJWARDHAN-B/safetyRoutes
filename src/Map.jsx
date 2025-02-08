@@ -6,6 +6,9 @@ import "leaflet/dist/leaflet.css";
 import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import RouteForm from './components/RouteForm';
+import HelpButton from './HelpButton';
+import axios from 'axios';
+
 //import { Navigate } from "react-router-dom";
 
 
@@ -21,28 +24,23 @@ const Map = () => {
   const [L, setL] = useState(null);
   const [routeLayer, setRouteLayer] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
-    const [location, setLocation] = useState("");
-    const [coordinates, setCoordinates] = useState(null);
-    const [error, setError] = useState(null);
-  const [startCoordinates, setStartCoordinates] = useState(null);
-  const [endCoordinates, setEndCoordinates] = useState(null);
-
     
     const [startCoords, setStartCoords] = useState(null);
     const [endCoords, setEndCoords] = useState(null);
     const [coordString, setCoordString] = useState('');
     const [parsedCoords, setParsedCoords] = useState(null);
-
+    const [error, setError] = useState('');
     const [response, setResponse] = useState(null);
+    const GOOGLE_API_KEY = "AIzaSyC_UyL76JWgPVAba9PRaEPvwxhLFDQUKDM"; 
   
-  
+
+    
+
   // Popup states
   const [showSavedPopup, setShowSavedPopup] = useState(false);
   const [showRecentPopup, setShowRecentPopup] = useState(false);
   const [showPhonePopup, setShowPhonePopup] = useState(false);
   const [showPolicePopup, setShowPolicePopup] = useState(false);
-
-  const GOOGLE_API_KEY = "AIzaSyC_UyL76JWgPVAba9PRaEPvwxhLFDQUKDM";
 
   const getCoordinates = async (location, type) => {
     try {
@@ -107,14 +105,7 @@ const Map = () => {
   // Handle form submission and POST request to FastAPI
   const handleSubmit = async (e) => {
     setShowRouteDialog(false)
-    e.preventDefault();
-    if (startLocation.trim()) {
-      getCoordinates(startLocation, "start");
-    }
-
-    if (endLocation.trim()) {
-      getCoordinates(endLocation, "end");
-    }
+    e.preventDefault(); // Prevent page reload
 
     try {
       // Parse coordinates from input string
@@ -150,8 +141,55 @@ const Map = () => {
       console.log(safe_route);
       
           // Create a polyline using the coordinates and add it to the map
-    const polyline = L.polyline(safe_route, { color: 'blue', weight: 7, opacity: 0.7 }).addTo(map);
-    L.polyline(alt_route, { color: 'grey', weight: 5, opacity: 1 }).addTo(map);
+          var endLat = parsed_end[0];  // Example: San Francisco
+          var endLng = parsed_end[1];
+      
+      
+          // Initialize the user path polyline
+          var fixedRoute = safe_route;
+    
+        // Draw the fixed route on the map
+        var routePolyline = L.polyline(fixedRoute, { color: 'green', weight: 4, opacity:0.8}).addTo(map);
+        var altroutePolyline = L.polyline(alt_route, { color: 'blue', weight: 4, opacity:0.7 }).addTo(map);
+        // Marker for the user
+        //var userMarker = L.circleMarker([0, 0]).addTo(map).bindPopup("You are here");
+      
+        var userMarker = L.circleMarker([0, 0]).addTo(map);
+        // Polyline for the user's movement (blue)
+        var userPolyline = L.polyline([], { color: 'blue', weight: 4 }).addTo(map);
+        
+    
+        // Track user’s movement
+        function updateUserLocation(position) {
+            var lat = position.coords.latitude;
+            var lon = position.coords.longitude;
+            var userPos = [lat, lon];
+    
+            // Update marker position
+            userMarker.setLatLng(userPos).setPopupContent(`You are here<br>Lat: ${lat.toFixed(5)}, Lon: ${lon.toFixed(5)}`);
+    
+            // Update user polyline (append only if moving along the fixed route)
+            userPolyline.addLatLng(userPos);
+    
+            // Move map to user's location
+            map.setView(userPos);
+        }
+    
+          
+      
+          function handleLocationError(error) {
+              console.error("Error getting location: ", error);
+          }
+      
+          // Start tracking user
+          if (navigator.geolocation) {
+              navigator.geolocation.watchPosition(updateUserLocation, handleLocationError, {
+                  enableHighAccuracy: true,
+                  maximumAge: 0
+              });
+          } else {
+              alert("Geolocation is not supported by this browser.");
+          }
 
     // Add a marker at the start (first coordinate)
     const startMarker = L.circleMarker(safe_route[0], 
@@ -659,10 +697,18 @@ ${darkMode ? "bg-gray-900 text-gray-200" : "bg-white text-gray-900"}`}>
 
       {/* Bottom Right Buttons */}
     {/* Bottom Right Buttons */}
-    <div className="absolute bottom-7 right-5 flex flex-col gap-4 z-20">
-        <button className="px-7 py-5 bg-red-500 text-white shadow-md rounded-lg border-2 border-red-700 w-full z-20">
-          ⚠ <span className="text-white-700 font-bold">HELP</span>
-        </button>
+<div className="absolute bottom-7 right-5 flex flex-col gap-4 z-20">
+{/* HELP Button */}
+  {/* <button
+  //onClick={() => setShowRouteDialog(false)}
+    className={`relative w-0 h-0 border-l-[40px] border-r-[40px] border-b-[70px] border-l-transparent border-r-transparent 
+    ${!darkMode ? "border-b-red-600 text-white" : "border-b-[#FFFF00] text-black"} animate-pulse z-20`}
+  >
+    <span className="absolute top-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-2xl">
+      <b>!</b>
+    </span>
+  </button> */}
+  <HelpButton />
 
 
 <div className="flex flex-col px-8 py-2 gap-2 z-20">
