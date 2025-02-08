@@ -297,7 +297,7 @@ const Map = () => {
     // Add a marker at the end (last coordinate)
     
 
-      map.fitBounds(polyline.getBounds());
+      map.fitBounds(routePolyline.getBounds());
   
       // Add a marker at the end (last coordinate)
      
