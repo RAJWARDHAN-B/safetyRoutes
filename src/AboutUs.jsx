@@ -13,7 +13,7 @@ const AboutUs = () => {
       {/* Navbar */}
       <nav className="absolute top-2 left-0 right-0 flex items-center justify-between p-4 z-30 text-lg md:text-xl bg-opacity-80 backdrop-blur-md">
         {/* Logo */}
-        <Link to="/" className={`text-2xl md:text-3xl font-extrabold ${isLightMode ? 'text-gray-800' : 'text-white'}`}>
+        <Link to="/LandingPage2" className={`text-2xl md:text-3xl font-extrabold ${isLightMode ? 'text-gray-800' : 'text-white'}`}>
           WaySecure
         </Link>
 

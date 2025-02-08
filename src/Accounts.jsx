@@ -291,7 +291,7 @@ getUser()
       <div className="max-w-2xl mx-auto space-y-6">
 
       <div className="flex justify-between items-center p-4  transition-colors duration-300">
-      <a href="/" className={`absolute top-5 left-7 text-3xl cursor-pointer font-extrabold z-30 ${!darkMode ? 'text-gray-800' : 'text-white'}`}>
+      <a href="/LandingPage2" className={`absolute top-5 left-7 text-3xl cursor-pointer font-extrabold z-30 ${!darkMode ? 'text-gray-800' : 'text-white'}`}>
   WaySecure
 </a>
 </div>

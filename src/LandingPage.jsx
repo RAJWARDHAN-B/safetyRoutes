@@ -14,7 +14,7 @@ const translations = {
     login: "Login",
     signUp: "Sign Up",
     title: "WaySecure",
-    mission: "Our mission is to help you travel with Confidence",
+    mission: "Our mission is to help you travel with confidence",
     getDirections: "Get Directions",
     footer: "Designed and developed by team HackElite",
     safetyTip: "Safety Tip:",
@@ -192,7 +192,7 @@ const LandingPage = () => {
       )}
 
       {/* Navigation Menu */}
-      <div className="absolute top-2 left-105 right-0 flex items-center p-4 z-30 text-xl">
+      <div className="absolute top-2 left-125 right-0 flex items-center p-4 z-30 text-xl">
         <div className="flex space-x-10">
           <button
             className={`font-medium transition-all duration-300 

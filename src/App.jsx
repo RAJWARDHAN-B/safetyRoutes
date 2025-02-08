@@ -9,6 +9,7 @@ import Accounts from "./Accounts";
 import HowItWorks from "./HowitWorks";
 import AboutUs from "./AboutUs";
 import BotpressChat from "./components/botpressChat";
+import LandingPage2 from "./LandingPage2";
 import LocationForm from "./LocationForm"; // Import the new LocationForm component
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
         <Route path="/accounts" element={<Accounts />} />
         <Route path="/how" element={<HowItWorks />} />
         <Route path="/location" element={<LocationForm />} /> {/* New Route for Location Form */}
+        <Route path="/LandingPage2" element={<LandingPage2/>}/>
       </Routes>
     </Router>
   );
