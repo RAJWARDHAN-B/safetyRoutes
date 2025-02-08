@@ -107,10 +107,35 @@ const Map = () => {
       getCoordinates(startLocation);
     }
     
+    let startCoords = startLocation; 
     try {
       // Parse coordinates from input string
-      const parsed_start = await getCoordinates(startLocation);
-      console.log(parsed_start);
+      try {
+        
+        let endCoords = endLocation;
+    
+        // Get user GPS coordinates for starting location
+        if (!startCoords.trim() && navigator.geolocation) {
+          await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                startCoords = [parseFloat(position.coords.latitude), parseFloat(position.coords.longitude)];
+                resolve();
+              },
+              (error) => {
+                console.error("Error getting start location:", error);
+                reject(error);
+              },
+              { enableHighAccuracy: true }
+            );
+          });
+        }
+      }
+      catch (error) {
+        console.error("Error handling form submission:", error);}
+    
+
+      console.log(startCoords);
       const parsed_end = await getCoordinates(endLocation);
       console.log(parsed_end);
       //setParsedCoords(parsed); // Store parsed coordinates
@@ -124,7 +149,7 @@ const Map = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({"start": parsed_start, "end": parsed_end }), // send the parsed coordinates as origin and destination
+        body: JSON.stringify({"start": startCoords, "end": parsed_end }), // send the parsed coordinates as origin and destination
       });
 
       const alt_response = await fetch("http://127.0.0.1:8000/alt_route", {
