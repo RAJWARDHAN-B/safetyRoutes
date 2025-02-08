@@ -238,8 +238,10 @@
 // export default ProfilePage;
 
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import axios from "axios"
 const ProfilePage = () => {
+  const navigate = useNavigate();
   const [darkMode, setDarkMode] = useState(true);
   const [isEditing, setIsEditing] = useState({ username: false, email: false, phone: false });
   const [profile, setProfile] = useState({});
@@ -469,7 +471,10 @@ getUser()
             <h2 className="text-xl font-semibold">Previous Reports</h2>
           </div>
           <div className="p-6">
-            <button className="w-full flex justify-between items-center text-purple-500 hover:text-purple-600 py-2">
+            <button
+            onClick={() => navigate("/report")}
+            className="w-full flex justify-between items-center text-purple-500 hover:text-purple-600 py-2">
+
               See all reports
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
