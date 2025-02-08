@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import React from "react";
 import L from "leaflet";
+import axios from "axios";
 import "leaflet/dist/leaflet.css";
 import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
@@ -19,12 +21,18 @@ const Map = () => {
   const [L, setL] = useState(null);
   const [routeLayer, setRouteLayer] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
+    const [location, setLocation] = useState("");
+    const [coordinates, setCoordinates] = useState(null);
+    const [error, setError] = useState(null);
+  const [startCoordinates, setStartCoordinates] = useState(null);
+  const [endCoordinates, setEndCoordinates] = useState(null);
+
     
     const [startCoords, setStartCoords] = useState(null);
     const [endCoords, setEndCoords] = useState(null);
     const [coordString, setCoordString] = useState('');
     const [parsedCoords, setParsedCoords] = useState(null);
-    const [error, setError] = useState('');
+
     const [response, setResponse] = useState(null);
   
   
@@ -34,6 +42,43 @@ const Map = () => {
   const [showPhonePopup, setShowPhonePopup] = useState(false);
   const [showPolicePopup, setShowPolicePopup] = useState(false);
 
+  const GOOGLE_API_KEY = "AIzaSyC_UyL76JWgPVAba9PRaEPvwxhLFDQUKDM";
+
+  const getCoordinates = async (location, type) => {
+    try {
+      const response = await axios.get("https://maps.googleapis.com/maps/api/geocode/json", {
+        params: {
+          address: location,
+          key: GOOGLE_API_KEY,
+        },
+      });
+  
+      if (response.data.results.length > 0) {
+        const { lat, lng } = response.data.results[0].geometry.location;
+  
+        // Log coordinates directly after they are fetched
+        console.log(`${type} location coordinates:`);
+        console.log("Latitude:", lat);
+        console.log("Longitude:", lng);
+  
+        // Convert lat and lng to float and store them in respective coordinates list
+        const parsedCoordinates = [parseFloat(lat), parseFloat(lng)];
+  
+        if (type === "start") {
+          setStartCoordinates(parsedCoordinates);
+        } else if (type === "end") {
+          setEndCoordinates(parsedCoordinates);
+        }
+  
+        setError(null);
+      } else {
+        setError("Location not found.");
+      }
+    } catch (err) {
+      setError("Error fetching data. Please try again.");
+    }
+  };
+  
   
   // Demo data
   const [savedAddresses, setSavedAddresses] = useState([
@@ -62,7 +107,14 @@ const Map = () => {
   // Handle form submission and POST request to FastAPI
   const handleSubmit = async (e) => {
     setShowRouteDialog(false)
-    e.preventDefault(); // Prevent page reload
+    e.preventDefault();
+    if (startLocation.trim()) {
+      getCoordinates(startLocation, "start");
+    }
+
+    if (endLocation.trim()) {
+      getCoordinates(endLocation, "end");
+    }
 
     try {
       // Parse coordinates from input string
@@ -479,51 +531,50 @@ className={`absolute top-0 left-0 w-full p-2 flex items-center shadow-md z-50 tr
         </div>
         
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Starting Location */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Starting Location Coordinates
-            </label>
-            <input
-              type="text"
-              value={startLocation}
-              onChange={(e) => setStartLocation(e.target.value)}
-              placeholder="e.g., 40.7128,74.0060"
-              className="w-full p-2 border rounded"
-            />
-          </div>
-  
-          {/* Ending Location */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Destination Coordinates
-            </label>
-            <input
-              type="text"
-              value={endLocation}
-              onChange={(e) => setEndLocation(e.target.value)}
-              placeholder="e.g., 40.9115,73.7824"
-              className="w-full p-2 border rounded"
-            />
-          </div>
-  
-          {/* Action buttons */}
-          <div className="flex justify-end space-x-2 pt-4">
-            <button
-              type="button"
-              onClick={() => setShowRouteDialog(false)}
-              className="px-4 py-2 border rounded hover:bg-gray-100"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-            >
-              Get Directions
-            </button>
-          </div>
-        </form>
+        {/* Starting Location */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Starting Location Coordinates
+          </label>
+          <input
+            type="text"
+            value={startLocation}
+            onChange={(e) => setStartLocation(e.target.value)}
+            placeholder="e.g., New York"
+            className="w-full p-2 border rounded"
+          />
+        </div>
+
+        {/* Ending Location */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Destination Coordinates
+          </label>
+          <input
+            type="text"
+            value={endLocation}
+            onChange={(e) => setEndLocation(e.target.value)}
+            placeholder="e.g., Los Angeles"
+            className="w-full p-2 border rounded"
+          />
+        </div>
+
+        {/* Action buttons */}
+        <div className="flex justify-end space-x-2 pt-4">
+          <button
+            type="button"
+            className="px-4 py-2 border rounded hover:bg-gray-100"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            Get Directions
+          </button>
+        </div>
+      </form>
       </div>
       )}
     </div>

@@ -1,21 +1,15 @@
-// import LoginPage from "./LoginPage";
-
-
-// function App() {
-//   return <LoginPage />;
-// }
-
-// export default App;
+// src/App.jsx
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LandingPage from "./LandingPage";
-import LoginPage from "./LoginPage"; // Create this page
-import SignUpPage from "./SignUpPage"; // Create this page
+import LoginPage from "./LoginPage";
+import SignUpPage from "./SignUpPage";
 import Map from "./Map";
 import FileReport from "./FileReport";
 import Accounts from "./Accounts";
 import HowItWorks from "./HowitWorks";
 import AboutUs from "./AboutUs";
 import BotpressChat from "./components/botpressChat";
+import LocationForm from "./LocationForm"; // Import the new LocationForm component
 
 function App() {
   return (
@@ -25,15 +19,15 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/map" element={<Map/>}/>
-        <Route path="/file" element={<FileReport/>}/>
-        <Route path="/aboutus" element={<AboutUs/>}/>
-        <Route path="/accounts" element={<Accounts/>}/>
-        <Route path="/how" element={<HowItWorks/>}/>
-
+        <Route path="/map" element={<Map />} />
+        <Route path="/file" element={<FileReport />} />
+        <Route path="/aboutus" element={<AboutUs />} />
+        <Route path="/accounts" element={<Accounts />} />
+        <Route path="/how" element={<HowItWorks />} />
+        <Route path="/location" element={<LocationForm />} /> {/* New Route for Location Form */}
       </Routes>
     </Router>
   );
 }
 
-  export default App;
+export default App;
