@@ -99,8 +99,55 @@ const Map = () => {
       console.log(safe_route);
       
           // Create a polyline using the coordinates and add it to the map
-    const polyline = L.polyline(safe_route, { color: 'blue', weight: 7, opacity: 0.7 }).addTo(map);
-    L.polyline(alt_route, { color: 'grey', weight: 5, opacity: 1 }).addTo(map);
+          var endLat = parsed_end[0];  // Example: San Francisco
+          var endLng = parsed_end[1];
+      
+      
+          // Initialize the user path polyline
+          var fixedRoute = safe_route;
+    
+        // Draw the fixed route on the map
+        var routePolyline = L.polyline(fixedRoute, { color: 'green', weight: 4, opacity:0.8}).addTo(map);
+        var altroutePolyline = L.polyline(alt_route, { color: 'blue', weight: 4, opacity:0.7 }).addTo(map);
+        // Marker for the user
+        //var userMarker = L.circleMarker([0, 0]).addTo(map).bindPopup("You are here");
+      
+        var userMarker = L.circleMarker([0, 0]).addTo(map);
+        // Polyline for the user's movement (blue)
+        var userPolyline = L.polyline([], { color: 'blue', weight: 4 }).addTo(map);
+        
+    
+        // Track user’s movement
+        function updateUserLocation(position) {
+            var lat = position.coords.latitude;
+            var lon = position.coords.longitude;
+            var userPos = [lat, lon];
+    
+            // Update marker position
+            userMarker.setLatLng(userPos).setPopupContent(`You are here<br>Lat: ${lat.toFixed(5)}, Lon: ${lon.toFixed(5)}`);
+    
+            // Update user polyline (append only if moving along the fixed route)
+            userPolyline.addLatLng(userPos);
+    
+            // Move map to user's location
+            map.setView(userPos);
+        }
+    
+          
+      
+          function handleLocationError(error) {
+              console.error("Error getting location: ", error);
+          }
+      
+          // Start tracking user
+          if (navigator.geolocation) {
+              navigator.geolocation.watchPosition(updateUserLocation, handleLocationError, {
+                  enableHighAccuracy: true,
+                  maximumAge: 0
+              });
+          } else {
+              alert("Geolocation is not supported by this browser.");
+          }
 
     // Add a marker at the start (first coordinate)
     const startMarker = L.circleMarker(safe_route[0], 
