@@ -1,19 +1,28 @@
 import React, { useState, useEffect } from 'react';
 
 const HowItWorks = () => {
-  const [darkMode, setDarkMode] = useState(true); // Default to dark mode
+  const [darkMode, setDarkMode] = useState(true);
   const [activeText, setActiveText] = useState('');
   const isLightMode = !darkMode;
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     document.body.classList.add('dark');
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
     return () => {
       document.body.classList.remove('dark');
+      window.removeEventListener('resize', checkMobile);
     };
   }, []);
 
   const DialogBox = () => (
-    <div className={`border rounded-lg p-4 w-[400px] transition-colors duration-300 ${
+    <div className={`border rounded-lg p-4 w-[400px] max-w-full transition-colors duration-300 ${
       darkMode ? 'bg-gray-800 border-gray-700 text-white' : 'bg-white border-gray-200 text-black'
     }`}>
       <div className="flex justify-between items-center mb-4">
@@ -77,7 +86,7 @@ const HowItWorks = () => {
         </a>
       </div>
 
-      <div className="max-w-6xl mx-auto p-6">
+      <div className="max-w-6xl mx-auto p-6 w-full overflow-x-hidden">
         {/* Dark Mode Toggle */}
         <div className="flex justify-end mb-6">
           <div 
@@ -102,15 +111,17 @@ const HowItWorks = () => {
           </p>
         </div>
 
-        <div className="flex justify-between gap-4">
+        <div className="flex flex-col lg:flex-row justify-between gap-4">
           {/* Left Column */}
           <div className="space-y-8 flex-1">
             <div className="flex flex-col items-center">
               <button
                 className={`mt-6 px-20 py-2 text-sm font-semibold rounded-md transition-all z-20 ${
-                  isLightMode
+                  isMobile
                     ? "bg-[#6EE7B7] text-black hover:bg-[#34D399]"
-                    : "bg-gradient-to-b from-[#00FFC6] to-[#008F5F] text-white hover:from-[#66FFA9] hover:to-[#006B4F] shadow-lg shadow-cyan-500/15"
+                    : isLightMode
+                      ? "bg-[#6EE7B7] text-black hover:bg-[#34D399]"
+                      : "bg-gradient-to-b from-[#00FFC6] to-[#008F5F] text-white hover:from-[#66FFA9] hover:to-[#006B4F] shadow-lg shadow-cyan-500/15"
                 }`}
                 onClick={() => setActiveText(activeText === 'directions' ? '' : 'directions')}
               >
@@ -127,7 +138,7 @@ const HowItWorks = () => {
               <input
                 type="text"
                 placeholder="Enter your destination"
-                className={`ml-7 p-2 w-[600px] border rounded-lg cursor-pointer z-30 transition-all ${
+                className={`w-[600px] max-w-full p-2 border rounded-lg cursor-pointer z-30 transition-all ${
                   darkMode
                     ? "bg-gray-800 text-white border-gray-600 placeholder-gray-400"
                     : "bg-white text-black border-gray-300 placeholder-gray-500"
@@ -142,18 +153,10 @@ const HowItWorks = () => {
               </div>
             </div>
 
-            <div className="flex items-start gap-8">
-              <div className="flex flex-col items-center" onClick={() => setActiveText(activeText === 'dialog' ? '' : 'dialog')}>
-                <DialogBox />
-                <div className={`transition-all duration-300 mt-2 ${activeText === 'dialog' ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform -translate-y-2'}`}>
-                  <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                    Fill the required fields
-                  </p>
-                </div>
-              </div>
-
+            {/* Route Planning and Dialog Section */}
+            <div className="flex flex-col lg:flex-row items-start gap-8">
               {/* Route Planning Steps */}
-              <div className="flex-1">
+              <div className="flex-1 w-full order-2 lg:order-1">
                 <h3 className={`font-semibold mb-4 transition-colors duration-300 ${darkMode ? 'text-white' : 'text-black'}`}>
                   Plan Your Route:
                 </h3>
@@ -187,6 +190,16 @@ const HowItWorks = () => {
                   ))}
                 </div>
               </div>
+
+              {/* Dialog Box */}
+              <div className="flex flex-col items-center order-1 lg:order-2" onClick={() => setActiveText(activeText === 'dialog' ? '' : 'dialog')}>
+                <DialogBox />
+                <div className={`transition-all duration-300 mt-2 ${activeText === 'dialog' ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform -translate-y-2'}`}>
+                  <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                    Fill the required fields
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -196,7 +209,7 @@ const HowItWorks = () => {
           <h2 className={`text-xl font-bold mb-6 transition-colors duration-300 ${darkMode ? 'text-white' : 'text-black'}`}>
             ADDITIONAL BUTTONS:
           </h2>
-          <div className="grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[ 
               { id: 'help', icon: '⚠️', text: 'HELP', desc: 'Instantly sends an emergency alert' },
               { id: 'contacts', icon: '📞', text: 'CONTACTS', desc: 'Quick access to your emergency contacts' },
@@ -228,7 +241,7 @@ const HowItWorks = () => {
 
       {/* Footer */}
       <footer className={`w-full text-center py-2 mt-5 z-60 ${isLightMode ? 'bg-gray-200 text-gray-800' : 'bg-[#1C1C1C] text-gray-400'} mt-auto`}>
-        <div className="flex justify-center items-center space-x-4">
+        <div className="flex flex-col md:flex-row justify-center items-center gap-2 md:gap-4">
           <p>© 2025 WaySecure. All rights reserved.</p>
           <div className="flex space-x-2">
             <button 

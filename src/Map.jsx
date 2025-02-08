@@ -108,15 +108,20 @@ const Map = () => {
       getCoordinates(startLocation);
     }
     
-    let startCoords = startLocation; 
+    let startCoords = startLocation || null; 
     try {
       // Parse coordinates from input string
       try {
         
         let endCoords = endLocation;
-    
+        if(startCoords!=null)
+          {
+            startCoords= await getCoordinates(startCoords);
+          }
+          else
+          {
         // Get user GPS coordinates for starting location
-        if (!startCoords.trim() && navigator.geolocation) {
+        if ((!startCoords||!startCoords.trim()) && navigator.geolocation) {
           await new Promise((resolve, reject) => {
             navigator.geolocation.getCurrentPosition(
               (position) => {
@@ -132,17 +137,16 @@ const Map = () => {
           });
         }
       }
+      }
       catch (error) {
         console.error("Error handling form submission:", error);}
     
-
+      
       console.log(startCoords);
       const parsed_end = await getCoordinates(endLocation);
       console.log(parsed_end);
       //setParsedCoords(parsed); // Store parsed coordinates
       setError(''); // Reset any previous errors
-
-        
 
       // Send the parsed coordinates to the FastAPI backend
       const response = await fetch("http://127.0.0.1:8000/safe_route", {
@@ -158,7 +162,7 @@ const Map = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({"start": parsed_start, "end": parsed_end }), // send the parsed coordinates as origin and destination
+        body: JSON.stringify({"start": startCoords, "end": parsed_end }), // send the parsed coordinates as origin and destination
       });
       const alt_data=await alt_response.json();
       let alt_route = [];
