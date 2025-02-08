@@ -232,10 +232,11 @@ const Map = () => {
         // Draw the fixed route on the map
         var routePolyline = L.polyline(fixedRoute, { color: 'green', weight: 4, opacity:0.8}).addTo(map);
         //var altroutePolyline = L.polyline(alt_route, { color: 'blue', weight: 4, opacity:0.7 }).addTo(map);
-        alt_route.forEach(function(route){
-          var altroutePolyline = L.polyline(route, { color: 'blue', weight: 4, opacity:0.7 }).addTo(map);
-        });
-      
+        for(let i=0;i<(alt_route.length-1);i++)
+          {
+          L.polyline(alt_route[i], { color: 'blue', weight: 4, fillOpacity:0.7 }).addTo(map);
+        }
+        
         // Marker for the user
         
       
