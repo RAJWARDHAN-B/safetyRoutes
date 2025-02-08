@@ -81,7 +81,7 @@ const Map = () => {
 
       // Parse the response JSON
       const data = await response.json();
-      let safe_route=data["route"];
+      let safe_route=data["route"]; 
       console.log(safe_route);
           // Create a polyline using the coordinates and add it to the map
     const polyline = L.polyline(safe_route, { color: 'blue', weight: 4, opacity: 0.7 }).addTo(map);
@@ -451,7 +451,7 @@ className={`absolute top-0 left-0 w-full p-2 flex items-center shadow-md z-50 tr
           {/* Starting Location */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Starting Location (e.g., New York)
+              Starting Location Coordinates (e.g., New York)
             </label>
             <input
               type="text"
@@ -465,7 +465,7 @@ className={`absolute top-0 left-0 w-full p-2 flex items-center shadow-md z-50 tr
           {/* Ending Location */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Destination (e.g., Los Angeles)
+              Destination Coordinates (e.g., Los Angeles)
             </label>
             <input
               type="text"
