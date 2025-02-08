@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import RouteForm from './components/RouteForm';
 import HelpButton from './HelpButton';
 import axios from 'axios';
+import { List } from "lucide-react";
 
 //import { Navigate } from "react-router-dom";
 
@@ -134,7 +135,30 @@ const Map = () => {
         body: JSON.stringify({"start": parsed_start, "end": parsed_end }), // send the parsed coordinates as origin and destination
       });
       const alt_data=await alt_response.json();
-      let alt_route=alt_data["route"];   //alt response for alt routes
+      let alt_route = [];
+      if(Object.keys(alt_data).length==1)
+      {
+        alt_route.push(alt_data["route"]);
+      } 
+      
+      else if(Object.keys(alt_data).length==2)
+        {
+          alt_route.push(alt_data["route-1"]);
+          alt_route.push(alt_data["route-2"]);
+        }  
+
+      else if(Object.keys(alt_data).length==3)
+        {
+          alt_route.push(alt_data["route-1"]);
+          alt_route.push(alt_data["route-2"]);
+          alt_route.push(alt_data["route-3"]);
+        } 
+        
+      else if(Object.keys(alt_data).length==0)
+          {
+            alt_route.push([]);
+          } 
+      
 
       // Parse the response JSON
       const data = await response.json();
@@ -148,10 +172,15 @@ const Map = () => {
       
           // Initialize the user path polyline
           var fixedRoute = safe_route;
-    
+
+      
         // Draw the fixed route on the map
         var routePolyline = L.polyline(fixedRoute, { color: 'green', weight: 4, opacity:0.8}).addTo(map);
-        var altroutePolyline = L.polyline(alt_route, { color: 'blue', weight: 4, opacity:0.7 }).addTo(map);
+        //var altroutePolyline = L.polyline(alt_route, { color: 'blue', weight: 4, opacity:0.7 }).addTo(map);
+        alt_route.forEach(function(route){
+          var altroutePolyline = L.polyline(route, { color: 'blue', weight: 4, opacity:0.7 }).addTo(map);
+        });
+      
         // Marker for the user
         
       

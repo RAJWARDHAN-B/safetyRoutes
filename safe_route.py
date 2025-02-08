@@ -15,7 +15,7 @@ def get_routes(start, end):
     routes=[]
 
     if "routes" in data:
-        route_data = data["routes"][:3]  # Get up to 3 routes
+        route_data = data["routes"][:4]  # Get up to 3 routes
 
     # Store each route separately
         for route in route_data:

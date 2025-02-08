@@ -54,5 +54,18 @@ def predict_alt_route(data : coordinates):
 
     route = get_alt_routes(origin, destination)
 
-    return {"route": route[0]}
+    if(len(route)==1):
+        return {"route": route[0]}
+    
+    if(len(route)==0):
+        return {"route": [[]]}
+    
+    if(len(route)==2):
+        return {"route-1": route[0],
+                "route-2":route[1]}
+    
+    if(len(route)==3):
+        return {"route-1": route[0],
+                "route-2":route[1],
+                "route-3":route[2]}
 
