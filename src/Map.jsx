@@ -688,6 +688,7 @@ ${darkMode ? "bg-gray-900 text-gray-200" : "bg-white text-gray-900"}`}>
           onClick={() => setShowPolicePopup(true)}>
           🚔 {sidebarOpen && <span className="ml-2">Police Stations</span>}
   </button>
+  
 </nav>
 </div>
 
