@@ -1,54 +1,58 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 
 const PoliceStationsPopup = ({ darkMode, setShowPolicePopup }) => {
   const [policeStations, setPoliceStations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const GOOGLE_API_KEY = "AIzaSyC_UyL76JWgPVAba9PRaEPvwxhLFDQUKDM"; // Replace with your actual Google API key
-
-
-
-  // Fetch police stations based on the user's current location
+  // Fetch police stations based on the user's current location using Google Maps API
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        async (position) => {
+        (position) => {
           const { latitude, longitude } = position.coords;
 
-          try {
-            const response = await axios.get(
-              "https://maps.googleapis.com/maps/api/place/nearbysearch/json",
-              {
-                params: {
-                  location: `${latitude},${longitude}`,
-                  radius: 5000, // Set to 5km radius
-                  type: "police", // Search for police stations
-                  key: GOOGLE_API_KEY,
-                },
+          // Ensure the Google Maps API is loaded
+          if (window.google) {
+            const map = new window.google.maps.Map(document.createElement('div'), {
+              center: { lat: latitude, lng: longitude },
+              zoom: 12,
+            });
+
+            const request = {
+              location: map.getCenter(),
+              radius: 5000, // 5 km radius
+              type: 'police',
+            };
+
+            const service = new window.google.maps.places.PlacesService(map);
+
+            service.nearbySearch(request, (results, status) => {
+              if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+                // Map through the results and calculate distances
+                const mappedStations = results.map((station) => {
+                  const distance = getDistance(
+                    latitude,
+                    longitude,
+                    station.geometry.location.lat(),
+                    station.geometry.location.lng()
+                  );
+                  return { ...station, distance };
+                });
+
+                // Sort the stations by the smallest distance
+                const nearestStation = mappedStations.sort((a, b) => a.distance - b.distance)[0];
+
+                // Set only the nearest police station
+                setPoliceStations([nearestStation]);
+              } else {
+                setError("No nearby police stations found.");
               }
-            );
 
-            if (response.data.results.length > 0) {
-              // Sort the police stations by their distance to the current location
-              const sortedStations = response.data.results.map((station) => {
-                const distance = getDistance(
-                  latitude,
-                  longitude,
-                  station.geometry.location.lat,
-                  station.geometry.location.lng
-                );
-                return { ...station, distance };
-              }).sort((a, b) => a.distance - b.distance);
-
-              setPoliceStations([sortedStations[0]]); // Only keep the nearest one
-            } else {
-              setError("No nearby police stations found.");
-            }
-          } catch (err) {
-            setError("Error fetching nearby police stations.");
-          } finally {
+              setLoading(false);
+            });
+          } else {
+            setError("Google Maps API failed to load.");
             setLoading(false);
           }
         },
@@ -101,9 +105,10 @@ const PoliceStationsPopup = ({ darkMode, setShowPolicePopup }) => {
         ) : (
           <div>
             {policeStations.length > 0 && (
-              <div className="mb-2">
+              <div>
                 <h3 className="text-sm font-semibold">{policeStations[0].name}</h3>
                 <p className="text-sm">{policeStations[0].vicinity}</p>
+                <p className="text-sm">Distance: {policeStations[0].distance.toFixed(2)} km</p>
               </div>
             )}
           </div>
