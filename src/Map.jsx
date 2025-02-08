@@ -46,9 +46,13 @@ const Map = () => {
   
         if (response.data.results.length > 0) {
           const { lat, lng } = response.data.results[0].geometry.location;
-          setCoordinates([parseFloat(lat), parseFloat(lng)]);
-          console.log(coordinates.lat,coordinates.lng);
+          const coords = [lat, lng];
+          setCoordinates({lat, lng});
+          //console.log(parseFloat(lat));
+          //console.log(parseFloat(lng));
+          //console.log(coords);
           setError(null);
+          return coords;
         } else {
           setError("Location not found.");
           setCoordinates(null);
@@ -96,14 +100,18 @@ const Map = () => {
   const handleSubmit = async (e) => {
     setShowRouteDialog(false)
     e.preventDefault();
-    if (startLocation.trim()) {
+
+    if(location.trim())
+    {
       getCoordinates(startLocation);
     }
-
+    
     try {
       // Parse coordinates from input string
-      const parsed_start = parseCoordinates(startLocation);
-      const parsed_end = parseCoordinates(endLocation);
+      const parsed_start = await getCoordinates(startLocation);
+      console.log(parsed_start);
+      const parsed_end = await getCoordinates(endLocation);
+      console.log(parsed_end);
       //setParsedCoords(parsed); // Store parsed coordinates
       setError(''); // Reset any previous errors
 
@@ -145,13 +153,13 @@ const Map = () => {
         var routePolyline = L.polyline(fixedRoute, { color: 'green', weight: 4, opacity:0.8}).addTo(map);
         var altroutePolyline = L.polyline(alt_route, { color: 'blue', weight: 4, opacity:0.7 }).addTo(map);
         // Marker for the user
-        //var userMarker = L.circleMarker([0, 0]).addTo(map).bindPopup("You are here");
+        
       
         var userMarker = L.circleMarker([0, 0]).addTo(map);
         // Polyline for the user's movement (blue)
         var userPolyline = L.polyline([], { color: 'blue', weight: 4 }).addTo(map);
         
-    
+        
         // Track user’s movement
         function updateUserLocation(position) {
             var lat = position.coords.latitude;
@@ -193,7 +201,7 @@ const Map = () => {
       .bindPopup('Start Point')
       .openPopup();
 
-      const endMarker = L.marker(alt_route[alt_route.length-1], 
+      const endMarker = L.marker(safe_route[safe_route.length-1], 
         {
           colorFill:'blue'
         }
