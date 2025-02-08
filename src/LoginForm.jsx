@@ -64,7 +64,7 @@ const LoginPage = () => {
         <div className="flex items-center mb-4">
           <input type="checkbox" id="remember" className="mr-2" />
           <label htmlFor="remember" className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'} text-sm`}>
-            Remember for 30 days
+            Remember Me
           </label>
         </div>
 

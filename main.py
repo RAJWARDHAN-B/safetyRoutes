@@ -36,8 +36,16 @@ def predict_route(data : coordinates):
 
     return {"route": route}
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # You can specify specific domains instead of "*"
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods: GET, POST, OPTIONS, etc.
+    allow_headers=["*"],  # Allows all headers
+)
+
 @app.post('/alt_route')
-def predict_route(data : coordinates):
+def predict_alt_route(data : coordinates):
     start_lat, start_lon=data.start
     end_lat, end_lon=data.end
 
@@ -46,5 +54,5 @@ def predict_route(data : coordinates):
 
     route = get_alt_routes(origin, destination)
 
-    return {"route": r for r in route}
+    return {"route": route[0]}
 

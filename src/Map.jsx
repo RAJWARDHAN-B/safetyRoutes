@@ -61,6 +61,7 @@ const Map = () => {
 
   // Handle form submission and POST request to FastAPI
   const handleSubmit = async (e) => {
+    setShowRouteDialog(false)
     e.preventDefault(); // Prevent page reload
 
     try {
@@ -69,6 +70,8 @@ const Map = () => {
       const parsed_end = parseCoordinates(endLocation);
       //setParsedCoords(parsed); // Store parsed coordinates
       setError(''); // Reset any previous errors
+
+        
 
       // Send the parsed coordinates to the FastAPI backend
       const response = await fetch("http://127.0.0.1:8000/safe_route", {
@@ -79,24 +82,49 @@ const Map = () => {
         body: JSON.stringify({"start": parsed_start, "end": parsed_end }), // send the parsed coordinates as origin and destination
       });
 
+      const alt_response = await fetch("http://127.0.0.1:8000/alt_route", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({"start": parsed_start, "end": parsed_end }), // send the parsed coordinates as origin and destination
+      });
+      const alt_data=await alt_response.json();
+      let alt_route=alt_data["route"];   //alt response for alt routes
+
       // Parse the response JSON
       const data = await response.json();
-      let safe_route=data["route"];
+      let safe_route=data["route"]; 
       console.log(safe_route);
+      
           // Create a polyline using the coordinates and add it to the map
-    const polyline = L.polyline(safe_route, { color: 'blue', weight: 4, opacity: 0.7 }).addTo(map);
+    const polyline = L.polyline(safe_route, { color: 'blue', weight: 7, opacity: 0.7 }).addTo(map);
+    L.polyline(alt_route, { color: 'grey', weight: 5, opacity: 1 }).addTo(map);
 
     // Add a marker at the start (first coordinate)
-    const startMarker = L.marker(safe_route[0]).addTo(map)
+    const startMarker = L.circleMarker(safe_route[0], 
+      {
+        colorFill:'red'
+      }
+    ).addTo(map)
       .bindPopup('Start Point')
       .openPopup();
 
+      const endMarker = L.marker(alt_route[alt_route.length-1], 
+        {
+          colorFill:'blue'
+        }
+      ).addTo(map)
+        .bindPopup('End Point')
+        .openPopup();
+
     // Add a marker at the end (last coordinate)
-    const endMarker = L.marker(safe_route[safe_route.length - 1]).addTo(map)
-      .bindPopup('End Point')
-      .openPopup();
+    
 
       map.fitBounds(polyline.getBounds());
+  
+      // Add a marker at the end (last coordinate)
+     
 
       // Assuming the response is a list of tuples, set the response
       if (data.route) {
@@ -231,6 +259,8 @@ const Map = () => {
       console.error('Error calculating route:', error);
       alert('Error calculating route. Please check your coordinates and try again.');
     }
+    
+
   };
 
   const handleSaveAddress = (index, address) => {
@@ -337,7 +367,7 @@ const PoliceStationsPopup = ({ darkMode }) => (
       className={`${darkMode ? "text-gray-400 hover:text-gray-300" : "text-gray-500 hover:text-gray-700"}`}>✖</button>
   </div>
   
-  <form onSubmit={handleRoutePlan} className="space-y-4">
+  {/* <form onSubmit={handleRoutePlan} className="space-y-4">
     <div>
       <label className={`block text-sm font-medium mb-1 ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
         Starting Location (latitude, longitude)
@@ -381,13 +411,14 @@ const PoliceStationsPopup = ({ darkMode }) => (
         Cancel
       </button>
       <button
+
         type="submit"
         className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
       >
         Get Directions
       </button>
     </div>
-  </form>
+  </form> */}
 </div>
 )}
 
@@ -451,13 +482,13 @@ className={`absolute top-0 left-0 w-full p-2 flex items-center shadow-md z-50 tr
           {/* Starting Location */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Starting Location (e.g., New York)
+              Starting Location Coordinates
             </label>
             <input
               type="text"
               value={startLocation}
               onChange={(e) => setStartLocation(e.target.value)}
-              placeholder="e.g., New York"
+              placeholder="e.g., 40.7128,74.0060"
               className="w-full p-2 border rounded"
             />
           </div>
@@ -465,13 +496,13 @@ className={`absolute top-0 left-0 w-full p-2 flex items-center shadow-md z-50 tr
           {/* Ending Location */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Destination (e.g., Los Angeles)
+              Destination Coordinates
             </label>
             <input
               type="text"
               value={endLocation}
               onChange={(e) => setEndLocation(e.target.value)}
-              placeholder="e.g., Los Angeles"
+              placeholder="e.g., 40.9115,73.7824"
               className="w-full p-2 border rounded"
             />
           </div>
