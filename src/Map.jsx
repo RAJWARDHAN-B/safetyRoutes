@@ -142,8 +142,6 @@ const Map = () => {
       //setParsedCoords(parsed); // Store parsed coordinates
       setError(''); // Reset any previous errors
 
-        
-
       // Send the parsed coordinates to the FastAPI backend
       const response = await fetch("http://127.0.0.1:8000/safe_route", {
         method: "POST",
@@ -158,7 +156,7 @@ const Map = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({"start": parsed_start, "end": parsed_end }), // send the parsed coordinates as origin and destination
+        body: JSON.stringify({"start": startCoords, "end": parsed_end }), // send the parsed coordinates as origin and destination
       });
       const alt_data=await alt_response.json();
       let alt_route = [];
