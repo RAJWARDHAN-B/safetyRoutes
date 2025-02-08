@@ -97,7 +97,32 @@ const Map = () => {
       throw new Error("Invalid coordinate format");
     }
   };
+  
+  const handleClick = ()=>
+  {
+    const clusters= [[34.04689962929679, -118.35705579504605],
+    [34.269792372427986, -118.44455932510289],
+    [33.94591010261854, -118.2717211606511],
+    [34.04052470773843, -118.24577952985722],
+    [33.768775096424214, -118.2850087540747],
+    [34.19019787943658, -118.37475043435096],
+    [33.96284442174786, -118.40261128587478],
+    [34.18734620306303, -118.45206598100808],
+    [34.20179825537645, -118.59932226820864],
+    [34.02933917768125, -118.45045141593884],
+    [34.09562022780433, -118.20603936743619],
+    [33.99957176728432, -118.29664523757091],
+    [34.06800440304671, -118.28798864549876],
+    [34.214240481675034, -118.53227340129271],
+    [34.099503360071445, -118.33119114612404]]
 
+      for(let i=0;i<(clusters.length-1);i++)
+      {
+        L.circleMarker(clusters[i], { color: 'red', weight: 1, opacity:0.8, radius: 15, fillOpacity:0.4, fillColor:'red' }).addTo(map);
+      }
+      //hotspot = L.circleMarker(center, { color: 'red', weight: 1, opacity:0.2, radius: 10, fillColor:'red' }).addTo(map);
+    
+  };
   // Handle form submission and POST request to FastAPI
   const handleSubmit = async (e) => {
     setShowRouteDialog(false)
@@ -696,7 +721,7 @@ ${darkMode ? "bg-gray-900 text-gray-200" : "bg-white text-gray-900"}`}>
   
           className={`p-3 flex items-center w-full transition-colors duration-200 
             ${darkMode ? "hover:bg-gray-700 text-gray-300" : "hover:bg-gray-200 text-gray-900"}`} 
-          onClick={() => setShowCrimeHotspotsPopup(true)}>
+          onClick={handleClick}>
           🎯 {sidebarOpen && <span className="ml-2">Crime Hotspots</span>}
   </button>
   
