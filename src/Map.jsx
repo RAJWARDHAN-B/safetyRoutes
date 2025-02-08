@@ -83,12 +83,24 @@ const Map = () => {
         body: JSON.stringify({"start": parsed_start, "end": parsed_end }), // send the parsed coordinates as origin and destination
       });
 
+      const alt_response = await fetch("http://127.0.0.1:8000/alt_route", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({"start": parsed_start, "end": parsed_end }), // send the parsed coordinates as origin and destination
+      });
+      const alt_data=await alt_response.json();
+      let alt_route=alt_data["route"];   //alt response for alt routes
+
       // Parse the response JSON
       const data = await response.json();
       let safe_route=data["route"]; 
       console.log(safe_route);
+      
           // Create a polyline using the coordinates and add it to the map
-    const polyline = L.polyline(safe_route, { color: 'blue', weight: 4, opacity: 0.7 }).addTo(map);
+    const polyline = L.polyline(safe_route, { color: 'blue', weight: 7, opacity: 0.7 }).addTo(map);
+    L.polyline(alt_route, { color: 'grey', weight: 5, opacity: 1 }).addTo(map);
 
     // Add a marker at the start (first coordinate)
     const startMarker = L.circleMarker(safe_route[0], 
@@ -99,36 +111,21 @@ const Map = () => {
       .bindPopup('Start Point')
       .openPopup();
 
-    // Add a marker at the end (last coordinate)
-    const endMarker = L.marker(safe_route[safe_route.length - 1]).addTo(map)
-      .bindPopup('End Point')
-      .openPopup();
-
-      map.fitBounds(polyline.getBounds());
-
-      const alt_response = await fetch("http://127.0.0.1:8000/safe_route", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({"start": parsed_start, "end": parsed_end }), // send the parsed coordinates as origin and destination
-      });
-      const alt_data=await alt_response.json();
-      let alt_route=data["route"][0];
-      const alt_polyline = L.polyline(alt_route, { color: 'blue', weight: 4, opacity: 0.7 }).addTo(map);
-
-      const altstartMarker = L.circleMarker(alt_route[0], 
+      const endMarker = L.marker(alt_route[alt_route.length-1], 
         {
-          colorFill:'red'
+          colorFill:'blue'
         }
       ).addTo(map)
-        .bindPopup('Start Point')
-        .openPopup();
-  
-      // Add a marker at the end (last coordinate)
-      const altendMarker = L.marker(alt_route[alt_route.length - 1]).addTo(map)
         .bindPopup('End Point')
         .openPopup();
+
+    // Add a marker at the end (last coordinate)
+    
+
+      map.fitBounds(polyline.getBounds());
+  
+      // Add a marker at the end (last coordinate)
+     
 
       // Assuming the response is a list of tuples, set the response
       if (data.route) {
@@ -612,7 +609,7 @@ ${darkMode ? "bg-gray-900 text-gray-200" : "bg-white text-gray-900"}`}>
 
       {/* Bottom Right Buttons */}
     {/* Bottom Right Buttons */}
-<div className="absolute bottom-7 right-5 flex flex-col gap-4 z-20">
+    <div className="absolute bottom-7 right-5 flex flex-col gap-4 z-20">
 {/* HELP Button */}
   {/* <button
   //onClick={() => setShowRouteDialog(false)}
