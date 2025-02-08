@@ -7,6 +7,7 @@ import RouteForm from './components/RouteForm';
 import HelpButton from './HelpButton';
 import axios from 'axios';
 import { List } from "lucide-react";
+import PoliceStationsPopup from "./PoliceStationsPopup";
 
 //import { Navigate } from "react-router-dom";
 
@@ -26,14 +27,16 @@ const Map = () => {
   const [location, setLocation] = useState("");
   const [coordinates, setCoordinates] = useState(null);
   const [error, setError] = useState(null);
+  // const [showPolicePopup, setShowPolicePopup] = useState(false);
+    
+  const [startCoords, setStartCoords] = useState(null);
+  const [endCoords, setEndCoords] = useState(null);
+  const [coordString, setCoordString] = useState('');
+  const [parsedCoords, setParsedCoords] = useState(null);
+  const [response, setResponse] = useState(null);
+  const GOOGLE_API_KEY = "AIzaSyC_UyL76JWgPVAba9PRaEPvwxhLFDQUKDM";
 
     
-    const [startCoords, setStartCoords] = useState(null);
-    const [endCoords, setEndCoords] = useState(null);
-    const [coordString, setCoordString] = useState('');
-    const [parsedCoords, setParsedCoords] = useState(null);
-    const [response, setResponse] = useState(null);
-    const GOOGLE_API_KEY = "AIzaSyC_UyL76JWgPVAba9PRaEPvwxhLFDQUKDM"; 
   
   
     const getCoordinates = async (location) => {
@@ -49,9 +52,6 @@ const Map = () => {
           const { lat, lng } = response.data.results[0].geometry.location;
           const coords = [lat, lng];
           setCoordinates({lat, lng});
-          //console.log(parseFloat(lat));
-          //console.log(parseFloat(lng));
-          //console.log(coords);
           setError(null);
           return coords;
         } else {
@@ -77,6 +77,7 @@ const Map = () => {
   const [savedAddresses, setSavedAddresses] = useState([
     '', '', '', '', ''  // 5 empty slots
   ]);
+
 
   const parseCoordinates = (coordString) => {
     try {
@@ -461,20 +462,20 @@ const PhonePopup = ({ darkMode }) => (
 </div>
 );
 
-const PoliceStationsPopup = ({ darkMode }) => (
-<div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
-  ${darkMode ? "bg-gray-800 text-gray-200 border-gray-600" : "bg-gray-100 text-gray-900 border-gray-300"} 
-  p-6 rounded-lg shadow-lg z-50 w-96 border`}>
-  <div className="flex justify-between items-center mb-4">
-    <h2 className="text-lg font-semibold">Nearby Police Stations</h2>
-    <button onClick={() => setShowPolicePopup(false)} className={`${darkMode ? "text-gray-400 hover:text-gray-300" : "text-gray-500 hover:text-gray-700"}`}>✖</button>
-  </div>
-  <div className={`text-center p-4 ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
-    <p>Fetching nearby police stations...</p>
-    <p className={`text-sm mt-2 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>This feature would integrate with a real police station API</p>
-  </div>
-</div>
-);
+// const PoliceStationsPopup = ({ darkMode }) => (
+// <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
+//   ${darkMode ? "bg-gray-800 text-gray-200 border-gray-600" : "bg-gray-100 text-gray-900 border-gray-300"} 
+//   p-6 rounded-lg shadow-lg z-50 w-96 border`}>
+//   <div className="flex justify-between items-center mb-4">
+//     <h2 className="text-lg font-semibold">Nearby Police Stations</h2>
+//     <button onClick={() => setShowPolicePopup(false)} className={`${darkMode ? "text-gray-400 hover:text-gray-300" : "text-gray-500 hover:text-gray-700"}`}>✖</button>
+//   </div>
+//   <div className={`text-center p-4 ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+//     <p>Fetching nearby police stations...</p>
+//     <p className={`text-sm mt-2 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>This feature would integrate with a real police station API</p>
+//   </div>
+// </div>
+// );
 
 // Update the Route Planning Dialog with dark mode
 {showRouteDialog && (
@@ -486,59 +487,6 @@ const PoliceStationsPopup = ({ darkMode }) => (
     <button onClick={() => setShowRouteDialog(false)} 
       className={`${darkMode ? "text-gray-400 hover:text-gray-300" : "text-gray-500 hover:text-gray-700"}`}>✖</button>
   </div>
-  
-  {/* <form onSubmit={handleRoutePlan} className="space-y-4">
-    <div>
-      <label className={`block text-sm font-medium mb-1 ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
-        Starting Location (latitude, longitude)
-      </label>
-      <input
-        type="text"
-        value={startLocation}
-        onChange={(e) => setStartLocation(e.target.value)}
-        placeholder="e.g., -97.7431,30.2672"
-        className={`w-full p-2 border rounded ${
-          darkMode ? "bg-black-700 text-gray-200 border-gray-600" : "bg-white text-gray-900 border-gray-300"
-        }`}
-      />
-    </div>
-
-    <div>
-      <label className={`block text-sm font-medium mb-1 ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
-        Destination (latitude, longitude)
-      </label>
-      <input
-        type="text"
-        value={endLocation}
-        onChange={(e) => setEndLocation(e.target.value)}
-        placeholder="e.g., -95.3698,29.7604"
-        className={`w-full p-2 border rounded ${
-          darkMode ? "bg-black-700 text-gray-200 border-gray-600" : "bg-white text-gray-900 border-gray-300"
-        }`}
-      />
-    </div>
-
-    <div className="flex justify-end space-x-2 pt-4">
-      <button
-        type="button"
-        onClick={() => setShowRouteDialog(false)}
-        className={`px-4 py-2 border rounded ${
-          darkMode 
-            ? "bg-gray-700 text-gray-200 border-gray-600 hover:bg-black-600" 
-            : "bg-white text-gray-900 border-gray-300 hover:bg-gray-100"
-        }`}
-      >
-        Cancel
-      </button>
-      <button
-
-        type="submit"
-        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-      >
-        Get Directions
-      </button>
-    </div>
-  </form> */}
 </div>
 )}
 
@@ -709,10 +657,11 @@ ${darkMode ? "bg-gray-900 text-gray-200" : "bg-white text-gray-900"}`}>
     onClick={() => setShowPhonePopup(true)}>
     📞 {sidebarOpen && <span className="ml-2">Phone</span>}
   </button>
-  <button className={`p-3 flex items-center w-full transition-colors duration-200 
-    ${darkMode ? "hover:bg-gray-700 text-gray-300" : "hover:bg-gray-200 text-gray-900"}`} 
-    onClick={() => setShowPolicePopup(true)}>
-    🚔 {sidebarOpen && <span className="ml-2">Police Stations</span>}
+  <button 
+          className={`p-3 flex items-center w-full transition-colors duration-200 
+            ${darkMode ? "hover:bg-gray-700 text-gray-300" : "hover:bg-gray-200 text-gray-900"}`} 
+          onClick={() => setShowPolicePopup(true)}>
+          🚔 {sidebarOpen && <span className="ml-2">Police Stations</span>}
   </button>
 </nav>
 </div>
