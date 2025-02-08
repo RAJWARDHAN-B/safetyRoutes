@@ -35,7 +35,7 @@ const HelpButton = () => {
       <button
         onClick={() => setShowDialog(true)}
         className={`relative w-0 h-0 border-l-[40px] border-r-[40px] border-b-[70px] border-l-transparent border-r-transparent 
-        ${!darkMode ? "border-b-red-600 text-white" : "border-b-[#FFFF00] text-black"} animate-pulse z-20`}
+        ${!darkMode ? "border-b-red-600 text-white" : "border-b-[#FFFF00] text-black"} animate-pulse z-20 mb-35`}
       >
         <span className="absolute top-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-2xl">
           <b>!</b>
@@ -43,7 +43,7 @@ const HelpButton = () => {
       </button>
 
       {showDialog && (
-        <div className="absolute top-full right-6 mt-2 p-4 bg-white rounded shadow-lg z-30">
+        <div className="absolute bottom-0 mb-[-5] right-6  p-4 bg-white rounded shadow-lg z-30">
           <input
             type="text"
             placeholder="Phone Number"
