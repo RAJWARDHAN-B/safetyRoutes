@@ -46,5 +46,5 @@ def predict_route(data : coordinates):
 
     route = get_alt_routes(origin, destination)
 
-    return {"route": r for r in route}
+    return {"route": route[0]}
 

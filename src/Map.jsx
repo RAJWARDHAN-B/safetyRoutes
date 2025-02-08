@@ -71,6 +71,8 @@ const Map = () => {
       //setParsedCoords(parsed); // Store parsed coordinates
       setError(''); // Reset any previous errors
 
+        
+
       // Send the parsed coordinates to the FastAPI backend
       const response = await fetch("http://127.0.0.1:8000/safe_route", {
         method: "POST",
@@ -102,6 +104,30 @@ const Map = () => {
       .openPopup();
 
       map.fitBounds(polyline.getBounds());
+
+      const alt_response = await fetch("http://127.0.0.1:8000/safe_route", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({"start": parsed_start, "end": parsed_end }), // send the parsed coordinates as origin and destination
+      });
+      const alt_data=await alt_response.json();
+      let alt_route=data["route"][0];
+      const alt_polyline = L.polyline(alt_route, { color: 'blue', weight: 4, opacity: 0.7 }).addTo(map);
+
+      const altstartMarker = L.circleMarker(alt_route[0], 
+        {
+          colorFill:'red'
+        }
+      ).addTo(map)
+        .bindPopup('Start Point')
+        .openPopup();
+  
+      // Add a marker at the end (last coordinate)
+      const altendMarker = L.marker(alt_route[alt_route.length - 1]).addTo(map)
+        .bindPopup('End Point')
+        .openPopup();
 
       // Assuming the response is a list of tuples, set the response
       if (data.route) {
