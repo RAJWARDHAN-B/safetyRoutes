@@ -66,14 +66,12 @@ const HowItWorks = () => {
   );
 
   return (
-    <div className={`transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'} min-h-screen`}>
+    <div className={`transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'} flex flex-col min-h-screen`}>
       {/* Header */}
       <div className="flex justify-between items-center p-4 transition-colors duration-300">
         <a 
           href="/" 
-          className={`absolute top-5 left-7 text-3xl cursor-pointer font-extrabold z-30 ${
-            darkMode ? 'text-white' : 'text-gray-800'
-          }`}
+          className={`absolute top-5 left-7 text-3xl cursor-pointer font-extrabold z-30 ${darkMode ? 'text-white' : 'text-gray-800'}`}
         >
           WaySecure
         </a>
@@ -96,9 +94,7 @@ const HowItWorks = () => {
 
         {/* Main Content */}
         <div className="text-center mb-8">
-          <h1 className={`text-2xl font-bold mb-2 transition-colors duration-300 ${
-            darkMode ? 'text-white' : 'text-black'
-          }`}>
+          <h1 className={`text-2xl font-bold mb-2 transition-colors duration-300 ${darkMode ? 'text-white' : 'text-black'}`}>
             HOW TO USE OUR WEBSITE TO GET DIRECTIONS
           </h1>
           <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -120,9 +116,7 @@ const HowItWorks = () => {
               >
                 Get Directions
               </button>
-              <div className={`transition-all duration-300 mt-2 ${
-                activeText === 'directions' ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform -translate-y-2'
-              }`}>
+              <div className={`transition-all duration-300 mt-2 ${activeText === 'directions' ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform -translate-y-2'}`}>
                 <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                   Redirects you to the Map
                 </p>
@@ -141,9 +135,7 @@ const HowItWorks = () => {
                 onClick={() => setActiveText(activeText === 'search' ? '' : 'search')}
                 readOnly
               />
-              <div className={`transition-all duration-300 mt-2 ${
-                activeText === 'search' ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform -translate-y-2'
-              }`}>
+              <div className={`transition-all duration-300 mt-2 ${activeText === 'search' ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform -translate-y-2'}`}>
                 <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                   The dialogue below appears, Kindly enter the start and end destination
                 </p>
@@ -153,9 +145,7 @@ const HowItWorks = () => {
             <div className="flex items-start gap-8">
               <div className="flex flex-col items-center" onClick={() => setActiveText(activeText === 'dialog' ? '' : 'dialog')}>
                 <DialogBox />
-                <div className={`transition-all duration-300 mt-2 ${
-                  activeText === 'dialog' ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform -translate-y-2'
-                }`}>
+                <div className={`transition-all duration-300 mt-2 ${activeText === 'dialog' ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform -translate-y-2'}`}>
                   <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                     Fill the required fields
                   </p>
@@ -164,9 +154,7 @@ const HowItWorks = () => {
 
               {/* Route Planning Steps */}
               <div className="flex-1">
-                <h3 className={`font-semibold mb-4 transition-colors duration-300 ${
-                  darkMode ? 'text-white' : 'text-black'
-                }`}>
+                <h3 className={`font-semibold mb-4 transition-colors duration-300 ${darkMode ? 'text-white' : 'text-black'}`}>
                   Plan Your Route:
                 </h3>
                 <div className="space-y-4">
@@ -186,9 +174,7 @@ const HowItWorks = () => {
                             ? 'Enter Destination' 
                             : 'Click on this button'}
                       </button>
-                      <div className={`transition-all duration-300 ${
-                        activeText === step ? 'opacity-100' : 'opacity-0'
-                      }`}>
+                      <div className={`transition-all duration-300 ${activeText === step ? 'opacity-100' : 'opacity-0'}`}>
                         <p className={`text-sm ml-4 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                           {step === 'location' 
                             ? 'Type in your current location or starting point'
@@ -207,13 +193,11 @@ const HowItWorks = () => {
 
         {/* Additional Buttons Section */}
         <div className="mt-12">
-          <h2 className={`text-xl font-bold mb-6 transition-colors duration-300 ${
-            darkMode ? 'text-white' : 'text-black'
-          }`}>
+          <h2 className={`text-xl font-bold mb-6 transition-colors duration-300 ${darkMode ? 'text-white' : 'text-black'}`}>
             ADDITIONAL BUTTONS:
           </h2>
           <div className="grid grid-cols-3 gap-6">
-            {[
+            {[ 
               { id: 'help', icon: '⚠️', text: 'HELP', desc: 'Instantly sends an emergency alert' },
               { id: 'contacts', icon: '📞', text: 'CONTACTS', desc: 'Quick access to your emergency contacts' },
               { id: 'police', icon: '🏢', text: 'POLICE STATIONS', desc: 'Shows nearest police stations on the map' }
@@ -231,9 +215,7 @@ const HowItWorks = () => {
                 >
                   {button.icon} {button.text}
                 </button>
-                <div className={`transition-all duration-300 mt-2 ${
-                  activeText === button.id ? 'opacity-100' : 'opacity-0'
-                }`}>
+                <div className={`transition-all duration-300 mt-2 ${activeText === button.id ? 'opacity-100' : 'opacity-0'}`}>
                   <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                     {button.desc}
                   </p>
@@ -243,6 +225,25 @@ const HowItWorks = () => {
           </div>
         </div>
       </div>
+
+      {/* Footer */}
+      <footer className={`w-full text-center py-2 mt-5 z-60 ${isLightMode ? 'bg-gray-200 text-gray-800' : 'bg-[#1C1C1C] text-gray-400'} mt-auto`}>
+        <div className="flex justify-center items-center space-x-4">
+          <p>© 2025 WaySecure. All rights reserved.</p>
+          <div className="flex space-x-2">
+            <button 
+              onClick={() => console.log('Language switched to English')} 
+              className="text-gray-500 hover:underline hover:text-gray-700 transition">
+              English
+            </button>
+            <button 
+              onClick={() => console.log('Language switched to Hindi')} 
+              className="text-gray-500 hover:underline hover:text-gray-700 transition">
+              हिंदी
+            </button>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
