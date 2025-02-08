@@ -692,6 +692,13 @@ ${darkMode ? "bg-gray-900 text-gray-200" : "bg-white text-gray-900"}`}>
           onClick={() => setShowPolicePopup(true)}>
           🚔 {sidebarOpen && <span className="ml-2">Police Stations</span>}
   </button>
+  <button 
+  
+          className={`p-3 flex items-center w-full transition-colors duration-200 
+            ${darkMode ? "hover:bg-gray-700 text-gray-300" : "hover:bg-gray-200 text-gray-900"}`} 
+          onClick={() => setShowCrimeHotspotsPopup(true)}>
+          🎯 {sidebarOpen && <span className="ml-2">Crime Hotspots</span>}
+  </button>
   
 </nav>
 </div>
