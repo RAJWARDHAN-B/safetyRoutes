@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 const ProfilePage = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
   const [isEditing, setIsEditing] = useState({ name: false, email: false, phone: false });
   const [profile, setProfile] = useState({
     name: 'bhavika',
@@ -42,7 +42,14 @@ const ProfilePage = () => {
   return (
     <div className={`min-h-screen p-8 transition-colors duration-200 ${darkMode ? 'bg-slate-900 text-gray-100' : 'bg-gray-50 text-gray-900'}`}>
       <div className="max-w-2xl mx-auto space-y-6">
+
+      <div className="flex justify-between items-center p-4  transition-colors duration-300">
+      <a href="/" className={`absolute top-5 left-7 text-3xl cursor-pointer font-extrabold z-30 ${!darkMode ? 'text-gray-800' : 'text-white'}`}>
+  WaySecure
+</a>
+</div>
         {/* Profile Header */}
+
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center gap-4">
             <div className="relative">
@@ -70,7 +77,7 @@ const ProfilePage = () => {
                 checked={darkMode}
                 onChange={() => setDarkMode(!darkMode)}
               />
-              <div className="w-14 h-7 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-purple-600"></div>
+              <div className="w-14 h-7 bg-gray-200 rounded-full peer peer-checked::translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-purple-600"></div>
             </label>
           </div>
         </div>

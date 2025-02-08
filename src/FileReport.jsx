@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 const FileReport = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
   const [location, setLocation] = useState('');
   const [time, setTime] = useState('');
   const [crime, setCrime] = useState('');
@@ -12,23 +12,22 @@ const FileReport = () => {
       darkMode ? 'bg-gray-900' : 'bg-gray-50'
     }`}>
       {/* Header */}
-      <div className="flex justify-between items-center p-4 border-b shadow-sm transition-colors duration-300">
-        <h1 className={`text-xl font-bold transition-colors duration-300 ${
-          darkMode ? 'text-white' : 'text-gray-800'
-        }`}>
-          WaySecure
-        </h1>
+      <div className="flex justify-between items-center p-4  transition-colors duration-300">
+      <a href="/" className={`absolute top-5 left-7 text-3xl cursor-pointer font-extrabold z-30 ${!darkMode ? 'text-gray-800' : 'text-white'}`}>
+  WaySecure
+</a>
+
 
         {/* Theme Toggle Switch */}
         <button
           onClick={() => setDarkMode(!darkMode)}
-          className="w-14 h-7 relative rounded-full transition-colors duration-300 focus:outline-none"
+          className="ml-290 w-14 h-7 relative rounded-full transition-colors duration-300 focus:outline-none"
         >
           <div className={`absolute inset-0 rounded-full transition-colors duration-300 ${
             darkMode ? 'bg-purple-600' : 'bg-gray-300'
           }`}></div>
           <div className={`absolute w-5 h-5 rounded-full bg-white shadow-lg transform transition-transform duration-300 ${
-            darkMode ? 'translate-x-8' : 'translate-x-1'
+            darkMode ? 'translate-x-1' : 'translate-x-8'
           } top-1`}></div>
         </button>
       </div>
@@ -136,7 +135,7 @@ const FileReport = () => {
 
           {/* Submit Button */}
           <button
-            className={`w-full py-2.5 rounded-lg font-medium transition-colors duration-300 ${
+            className={`mb-8 w-full py-2.5 rounded-lg font-medium transition-colors duration-300 ${
               darkMode 
                 ? 'bg-purple-600 text-white hover:bg-purple-700'
                 : 'bg-blue-600 text-white hover:bg-blue-700'
