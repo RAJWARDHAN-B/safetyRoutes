@@ -79,7 +79,7 @@ const HowItWorks = () => {
       {/* Header */}
       <div className="flex justify-between items-center p-4 transition-colors duration-300">
         <a 
-          href="/" 
+          href="/LandingPage2" 
           className={`absolute top-5 left-7 text-3xl cursor-pointer font-extrabold z-30 ${darkMode ? 'text-white' : 'text-gray-800'}`}
         >
           WaySecure

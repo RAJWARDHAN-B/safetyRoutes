@@ -112,7 +112,7 @@ const LoginPage = () => {
       });
 
       if (res.data.success) {
-        navigate('/');
+        navigate('/LandingPage2');
         setInput({ email: '', password: '' });
       }
     } catch (error) {
