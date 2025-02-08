@@ -451,7 +451,7 @@ className={`absolute top-0 left-0 w-full p-2 flex items-center shadow-md z-50 tr
           {/* Starting Location */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Starting Location Coordinates (e.g., New York)
+              Starting Location Coordinates
             </label>
             <input
               type="text"
@@ -465,7 +465,7 @@ className={`absolute top-0 left-0 w-full p-2 flex items-center shadow-md z-50 tr
           {/* Ending Location */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Destination Coordinates (e.g., Los Angeles)
+              Destination Coordinates
             </label>
             <input
               type="text"
