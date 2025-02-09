@@ -25,8 +25,8 @@ const AboutUs = () => {
         </div>
 
         {/* Mobile Menu Button */}
-        <button 
-          onClick={() => setMenuOpen(!menuOpen)} 
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
           className="md:hidden text-white text-lg border px-3 py-1 rounded"
         >
           {menuOpen ? "Close" : "Menu"}
@@ -34,9 +34,8 @@ const AboutUs = () => {
 
         {/* Mobile Dropdown */}
         <div
-          className={`absolute top-16 left-0 w-full bg-gray-900 text-white text-center py-6 space-y-6 md:hidden transition-all duration-300 ${
-            menuOpen ? 'block' : 'hidden'
-          }`}
+          className={`absolute top-16 left-0 w-full bg-gray-900 text-white text-center py-6 space-y-6 md:hidden transition-all duration-300 ${menuOpen ? 'block' : 'hidden'
+            }`}
         >
           <Link to="/how-it-works" className="block" onClick={() => setMenuOpen(false)}>How it Works</Link>
           <Link to="/file" className="block" onClick={() => setMenuOpen(false)}>File a Report</Link>
@@ -64,11 +63,16 @@ const AboutUs = () => {
 
         {/* Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-20">
-          {[{ icon: "📚", title: "Route Safety Mapping", desc: "Tracks the safest routes using community feedback and official data." },
+          {[
+            { icon: "📚", title: "Route Safety Mapping", desc: "Tracks the safest routes using community feedback and official data." },
             { icon: "📍", title: "Safe Locations", desc: "Find police stations, hospitals, and other safe zones nearby." },
             { icon: "🚨", title: "Emergency Alerts", desc: "Stay informed with real-time emergency alerts." },
           ].map(({ icon, title, desc }, index) => (
-            <div key={index} className={`rounded-lg p-6 md:p-8 ${isLightMode ? 'bg-white shadow-lg' : 'bg-[#1E293B]'}`}>
+            <div
+              key={index}
+              className={`rounded-lg p-6 md:p-8 transform transition-transform duration-300 hover:scale-108 cursor-pointer ${isLightMode ? 'bg-white shadow-lg' : 'bg-[#1E293B]'
+                }`}
+            >
               <div className="flex items-center mb-4">
                 <span className="text-3xl">{icon}</span>
                 <h2 className={`text-lg md:text-xl font-semibold ml-3 ${isLightMode ? 'text-gray-800' : 'text-white'}`}>{title}</h2>
@@ -77,6 +81,7 @@ const AboutUs = () => {
             </div>
           ))}
         </div>
+
 
         {/* Mission Section */}
         <div className="text-center mb-16">
@@ -88,10 +93,10 @@ const AboutUs = () => {
           {/* Icons Section */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {[{ img: mapimage, text: "Maps & Routing" },
-              { img: pinimage, text: "Safe Locations" },
-              { img: helpimage, text: "Emergency Alerts" },
+            { img: pinimage, text: "Safe Locations" },
+            { img: helpimage, text: "Emergency Alerts" },
             ].map(({ img, text }, index) => (
-              <div key={index} className={`p-4 md:p-6 shadow-md rounded-lg flex flex-col items-center ${isLightMode ? 'bg-white' : 'bg-[#1E293B]'}`}>
+              <div key={index} className={`p-4 md:p-6 shadow-md rounded-lg flex flex-col items-center transform transition-transform duration-300 hover:scale-108 cursor-pointer  ${isLightMode ? 'bg-white' : 'bg-[#1E293B]'}`}>
                 <img src={img} alt={text} className="w-24 h-24 object-cover rounded-lg mb-4" />
                 <p className={isLightMode ? 'text-gray-600' : 'text-gray-300'}>{text}</p>
               </div>

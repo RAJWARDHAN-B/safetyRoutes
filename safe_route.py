@@ -11,11 +11,12 @@ def get_routes(start, end):
     
     response = requests.get(url)
     data = response.json()
+    print(data)
 
     routes=[]
 
     if "routes" in data:
-        route_data = data["routes"][:4]  # Get up to 3 routes
+        route_data = data["routes"][:4]  # Get up to 4 routes
 
     # Store each route separately
         for route in route_data:
@@ -77,6 +78,7 @@ def get_alt_routes(start, end):
         return 0
     
     
+get_routes([-118.4005,34.0728],[-118.7332,33.7893])
     
 
 

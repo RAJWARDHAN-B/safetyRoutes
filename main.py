@@ -19,7 +19,6 @@ app.add_middleware(
 def home():
     return {'health check': 'ok'}
 
-
 class coordinates(BaseModel):
     start:list
     end:list
@@ -36,13 +35,6 @@ def predict_route(data : coordinates):
 
     return {"route": route}
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # You can specify specific domains instead of "*"
-    allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods: GET, POST, OPTIONS, etc.
-    allow_headers=["*"],  # Allows all headers
-)
 
 @app.post('/alt_route')
 def predict_alt_route(data : coordinates):

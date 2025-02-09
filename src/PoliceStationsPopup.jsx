@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const PoliceStationsPopup = ({ darkMode, setShowPolicePopup }) => {
+  const PoliceStationsPopup = ({ darkMode, setShowPolicePopup }) => {
   const [policeStations, setPoliceStations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
