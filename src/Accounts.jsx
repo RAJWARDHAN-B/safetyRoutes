@@ -245,10 +245,8 @@ const ProfilePage = () => {
   const [profile, setProfile] = useState({});
 
   const [emergencyContacts, setEmergencyContacts] = useState([
-    { name: 'Anannaya', relation: 'Mother', phone: '+91 9876543214' },
-    { name: 'Shubham ', relation: 'Father', phone: '+91 7876354111' },
-    { name: 'Rajwardhan ', relation: 'Brother', phone: '+91 8976543210' },
-    { name: 'Shuvayu', relation: 'Uncle', phone: '+91 986223210' },
+    { name: '', relation: '', phone: '' },
+    
   ]);
 
   const addEmergencyContact = () => {
@@ -409,59 +407,74 @@ getUser()
         </div>
 
         {/* Emergency Contacts */}
-        <div className={`rounded-lg shadow-sm border ${darkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
-          <div className="px-6 py-4 flex flex-row items-center justify-between border-b border-gray-200">
-            <h2 className="text-xl font-semibold">Emergency Contacts</h2>
+       {/* Emergency Contacts */}
+<form onSubmit={(e) => {
+  e.preventDefault();
+  // Handle form submission logic here
+}} className={`rounded-lg shadow-sm border ${darkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
+  <div className="px-6 py-4 flex flex-row items-center justify-between border-b border-gray-200 ">
+    <h2 className="text-xl font-semibold">Emergency Contacts</h2>
+    <button
+      type="button"
+      onClick={addEmergencyContact}
+      className={`px-3 py-1 rounded-md border flex items-center gap-2 ${darkMode ? 'border-slate-600 hover:bg-slate-700' : 'border-gray-200 hover:bg-gray-50'}`}
+    >
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path d="M12 4v16m8-8H4" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+      </svg>
+      Add Contact
+    </button>
+  </div>
+  <div className="p-6">
+    <div className="space-y-4">
+      {emergencyContacts.map((contact, index) => (
+        <div key={index} className={`p-4 rounded-lg ${darkMode ? 'bg-slate-700' : 'bg-gray-50'}`}>
+          <div className="flex justify-between items-start ">
+            <div className="space-y-1">
+              <input
+                type="text"
+                value={contact.name}
+                onChange={(e) => handleContactChange(index, 'name', e.target.value)}
+                placeholder="Name"
+                className="font-medium"
+              />
+              <input
+                
+                type="text"
+                value={contact.relation}
+                onChange={(e) => handleContactChange(index, 'relation', e.target.value)}
+                placeholder="Relation"
+                className="text-sm"
+              />
+              <input
+                type="text"
+                value={contact.phone}
+                onChange={(e) => handleContactChange(index, 'phone', e.target.value)}
+                placeholder="Phone Number"
+                className="text-sm"
+              />
+            </div>
             <button
-              onClick={addEmergencyContact}
-              className={`px-3 py-1 rounded-md border flex items-center gap-2 ${darkMode ? 'border-slate-600 hover:bg-slate-700' : 'border-gray-200 hover:bg-gray-50'}`}
+              type="button"
+              onClick={() => deleteContact(index)}
+              className={`p-2 rounded-md hover:${darkMode ? 'bg-slate-600' : 'bg-gray-100'}`}
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path d="M12 4v16m8-8H4" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
-              </svg>
-              Add Contact
+              🗑
             </button>
           </div>
-          <div className="p-6">
-            <div className="space-y-4">
-              {emergencyContacts.map((contact, index) => (
-                <div key={index} className={`p-4 rounded-lg ${darkMode ? 'bg-slate-700' : 'bg-gray-50'}`}>
-                  <div className="flex justify-between items-start">
-                    <div className="space-y-1">
-                      <input
-                        type="text"
-                        value={contact.name}
-                        onChange={(e) => handleContactChange(index, 'name', e.target.value)}
-                        placeholder="Name"
-                        className="font-medium"
-                      />
-                      <input
-                        type="text"
-                        value={contact.relation}
-                        onChange={(e) => handleContactChange(index, 'relation', e.target.value)}
-                        placeholder="Relation"
-                        className="text-sm"
-                      />
-                      <input
-                        type="text"
-                        value={contact.phone}
-                        onChange={(e) => handleContactChange(index, 'phone', e.target.value)}
-                        placeholder="Phone Number"
-                        className="text-sm"
-                      />
-                    </div>
-                    <button
-                      onClick={() => deleteContact(index)}
-                      className={`p-2 rounded-md hover:${darkMode ? 'bg-slate-600' : 'bg-gray-100'}`}
-                    >
-                      🗑
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
+      ))}
+    </div>
+  </div>
+  <div className="px-6 py-4 border-t border-gray-200">
+    <button
+      type="submit"
+      className={`w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : ''}`}
+    >
+      Save Emergency Contacts
+    </button>
+  </div>
+</form>
 
         {/* Previous Reports */}
         <div className={`rounded-lg shadow-sm border ${darkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
