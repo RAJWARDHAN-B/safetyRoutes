@@ -89,12 +89,8 @@ import React, { useEffect, useState } from "react";
     >
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold">Nearest Police Station</h2>
-        <button
-          onClick={() => setShowPolicePopup(false)} // Close the popup
-          className={`${darkMode ? "text-gray-400 hover:text-gray-300" : "text-gray-500 hover:text-gray-700"}`}
-        >
-          ✖
-        </button>
+        <button onClick={() => setShowPolicePopup(false)} className={`${darkMode ? "text-gray-400 hover:text-gray-300" : "text-gray-500 hover:text-gray-700"}`}>✖</button>
+
       </div>
 
       <div className={`text-center p-4 ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
