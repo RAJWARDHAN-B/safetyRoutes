@@ -357,7 +357,7 @@ const Map = () => {
 
       const mapInstance = L.map("map", {
         zoomControl: false,
-        maxBounds: [
+  
           [33.5, -119.0], // Southwest corner
           [34.5, -117.5], // Northeast corner
         ],maxBoundsViscosity: 1.0,
