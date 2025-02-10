@@ -182,7 +182,7 @@ const Map = () => {
         body: JSON.stringify({"start": startCoords, "end": parsed_end }), // send the parsed coordinates as origin and destination
       });
 
-      const alt_response = await fetch("http://127.0.0.1:800/alt_route", {
+      const alt_response = await fetch("http://127.0.0.1:8000/alt_route", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -214,7 +214,7 @@ const Map = () => {
             alt_route.push([]);
           } 
       
-
+      console.log(alt_route.length);
       // Parse the response JSON
       const data = await response.json();
       let safe_route=data["route"]; 
@@ -230,12 +230,31 @@ const Map = () => {
 
       
         // Draw the fixed route on the map
-        var routePolyline = L.polyline(fixedRoute, { color: 'green', weight: 4, opacity:0.8}).addTo(map);
+        var routePolyline = L.polyline(fixedRoute, { color: 'green', weight: 6, opacity:0.8}).addTo(map);
         //var altroutePolyline = L.polyline(alt_route, { color: 'blue', weight: 4, opacity:0.7 }).addTo(map);
-        for(let i=0;i<(alt_route.length-1);i++)
-          {
-          L.polyline(alt_route[i], { color: 'blue', weight: 4, fillOpacity:0.7 }).addTo(map);
+        // alt_route.forEach((route)=>
+        // {
+        //   L.polyline(route, { color: 'blue', weight: 4, fillOpacity:0.7 }).addTo(map);
+        // });
+        if(alt_route.length==1)
+        {
+          var altp=L.polyline(alt_route[0], { color: 'blue', weight: 4, fillOpacity:0.4 }).addTo(map);
         }
+        else if(alt_route.length==2)
+        {
+          for(i=0;i<2;i++)
+          {
+            var altp=L.polyline(alt_route[i], { color: 'blue', weight: 4, fillOpacity:0.4 }).addTo(map);
+          }
+        }
+        else if(alt_route.length==3)
+          {
+            for(i=0;i<3;i++)
+            {
+              var altp=L.polyline(alt_route[i], { color: 'blue', weight: 4, fillOpacity:0.4 }).addTo(map);
+            }
+          }
+        
         
         // Marker for the user
         
@@ -258,7 +277,7 @@ const Map = () => {
             userPolyline.addLatLng(userPos);
     
             // Move map to user's location
-            map.setView(userPos);
+           
         }
     
           
@@ -291,7 +310,7 @@ const Map = () => {
           colorFill:'blue'
         }
       ).addTo(map)
-        .bindPopup('End Point')
+        .bindPopup(endLocation)
         .openPopup();
 
     // Add a marker at the end (last coordinate)
@@ -341,19 +360,20 @@ const Map = () => {
         maxBounds: [
           [33.5, -119.0], // Southwest corner
           [34.5, -117.5], // Northeast corner
-        ],
-        maxBoundsViscosity: 1.0, // Keeps user inside the bounds
+        ],maxBoundsViscosity: 1.0,
+         // Keeps user inside the bounds
       }).setView([34.0522, -118.2437], 12); // Center on LA
   
 
       // Define tile layers for both themes
-      const lightTiles = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      });
+       const lightTiles = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+       });
 
-      const darkTiles = L.tileLayer("https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png", {
-        attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+       const darkTiles = L.tileLayer("https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png", {
+         attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
       });
+      
 
       // Add the appropriate layer based on current theme
       if (darkMode) {
@@ -736,7 +756,7 @@ ${darkMode ? "bg-gray-900 text-gray-200" : "bg-white text-gray-900"}`}>
       {showPolicePopup && <PoliceStationsPopup />}
 
       {/* Map Container */}
-      <div id="map" className="w-full h-full z-10" />
+      <div id="map"  className="w-full h-full z-10" />
 
       {/* Bottom Right Buttons */}
     {/* Bottom Right Buttons */}

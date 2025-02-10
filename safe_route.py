@@ -11,10 +11,10 @@ def get_routes(start, end):
     
     response = requests.get(url)
     data = response.json()
-    print(data)
+    
 
     routes=[]
-
+    distances=[]
     if "routes" in data:
         route_data = data["routes"][:4]  # Get up to 4 routes
 
@@ -22,7 +22,7 @@ def get_routes(start, end):
         for route in route_data:
             route_coords = route["geometry"]["coordinates"]
             routes.append(route_coords)
-    
+            
     return routes
 
 def avg_safety_score(route):
@@ -77,8 +77,9 @@ def get_alt_routes(start, end):
     except:
         return 0
     
-    
-get_routes([-118.4005,34.0728],[-118.7332,33.7893])
+
+get_routes([-118.302,34.5010],[-118.201,34.5201])
+
     
 
 

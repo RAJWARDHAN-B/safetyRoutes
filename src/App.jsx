@@ -11,7 +11,7 @@ import Accounts from "./Accounts";
 import HowItWorks from "./HowitWorks";
 import AboutUs from "./AboutUs";
 import BotpressChat from "./components/botpressChat";
-import LandingPage2 from "./LandingPage2";
+
 import LocationForm from "./LocationForm"; // Import the new LocationForm component
 
 function App() {

@@ -129,9 +129,9 @@ const HelpButton = () => {
           <div className="flex gap-2">
             <button
               onClick={sendMessage}
-              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+              className="w-38 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
             >
-              Send Help
+              Ask for Help
             </button>
             <button
               onClick={() => setShowDialog(false)}
