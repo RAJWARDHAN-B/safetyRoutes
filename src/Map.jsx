@@ -356,11 +356,9 @@ const Map = () => {
       setL(L);
 
       const mapInstance = L.map("map", {
-        zoomControl: false,
-  
-          [33.5, -119.0], // Southwest corner
-          [34.5, -117.5], // Northeast corner
-        ],maxBoundsViscosity: 1.0,
+          zoomControl: false,
+          maxBounds:[[33.5, -119.0],[34.5, -117.5]], // Northeast corner
+          maxBoundsViscosity: 1.0
          // Keeps user inside the bounds
       }).setView([34.0522, -118.2437], 12); // Center on LA
   
